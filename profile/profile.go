@@ -8,7 +8,12 @@ type Profile struct {
 }
 
 type Operation struct {
-	WakeUpTime string              `json:"wakeUp"`
+	WakeUpTime WakeUp              `json:"wakeUp"`
 	Url        string              `json:"url"`
 	Control    []map[string]string `json:"control"`
+}
+
+type WakeUp struct {
+	Date string `json:"date"`
+	Time string `json:"time"`
 }

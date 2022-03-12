@@ -2,37 +2,41 @@
   {
     "name": "1",
     "operation": {
-      "wakeUp": "2022/03/10",
+      "wakeUp": {
+        "date": "2006/01/02",
+        "time": "15:04"
+      },
       "url": "https://google.com",
       "control": [
-        {
-          "input": "JSON"
-        },
-        {
-          "wait": "1000"
-        },
-        {
-          "click": "JSON"
-        }
+        { "click": "body > div.L3eUgb > div.o3j99.ikrT4e.om7nvf > form > div:nth-child(1) > div.A8SBwf > div.RNNXgb > div > div.a4bIc > input" },
+        { "input": "JSON" },
+        { "wait": "1s"},
+        { "to": "https://yahoo.co.jp" },
+        { "wait": "1s"},
+        { "click": "#ContentWrapper > header > section._1o9PYyvuVafb5hd9eJ9rYX > div > form > fieldset > span > input"},
+        { "input": "Page Transition"},
+        { "screenShot": "sample2.png" }
       ]
     }
-  },
-  {
+  }
+  ,{
     "name": "2",
     "operation": {
-      "wakeUp": "2022/03/10",
-      "url": "https://yahoo.co.jp",
+      "wakeUp": {
+        "date": "2006/01/02",
+        "time": "15:04"
+      },
+      "url": "https://www.w3schools.com/tags/tryit.asp?filename=tryhtml_option",
       "control": [
-        {
-          "input": "JSON"
-        },
-        {
-          "wait": "1000"
-        },
-        {
-          "click": "JSON"
-        }
+        { "click": "body > div.L3eUgb > div.o3j99.ikrT4e.om7nvf > form > div:nth-child(1) > div.A8SBwf > div.RNNXgb > div > div.a4bIc > input" },
+        { "input": "JSON" },
+        { "wait": "1s"},
+        { "to": "https://yahoo.co.jp" },
+        { "wait": "1s"},
+        { "click": "#ContentWrapper > header > section._1o9PYyvuVafb5hd9eJ9rYX > div > form > fieldset > span > input"},
+        { "input": "Page Transition"},
+        { "screenShot": "sample2.png" }
       ]
     }
-  },
+  }
 ]
