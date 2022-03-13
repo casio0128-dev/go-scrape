@@ -3,8 +3,8 @@
     "name": "1",
     "operation": {
       "wakeUp": {
-        "date": "2006/01/02",
-        "time": "15:04"
+        "date": "2022/3/13",
+        "time": "15:14"
       },
       "url": "https://google.com",
       "control": [

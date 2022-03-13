@@ -12,7 +12,14 @@ func Do(page *agouti.Page, prof *profile.Profile) error {
 	if err := page.Navigate(target); err != nil {
 		return err
 	}
-	// TODO: wakeUpが指定されていたらその時間まで待機。別Groutineで動作させてメインゴルーチンは終了
+
+	if wakeUpTime, err := operation.WakeUpTime.DateTime(); err != nil {
+		return err
+	} else {
+		if time.Now().Before(wakeUpTime) {
+			<-time.After(time.Until(wakeUpTime))
+		}
+	}
 
 	var selection *agouti.Selection
 	for _, ctrls := range operation.Control {
