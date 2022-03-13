@@ -3,3 +3,6 @@ bin/*
 drivers/*
 !.gitkeep
 .DS_STORE
+*.png
+*.jpg
+*.jpeg
