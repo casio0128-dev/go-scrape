@@ -1,5 +1,7 @@
 package profile
 
+import "regexp"
+
 type Profiles []Profile
 
 type Profile struct {
@@ -16,4 +18,8 @@ type Operation struct {
 type WakeUp struct {
 	Date string `json:"date"`
 	Time string `json:"time"`
+}
+
+func (w WakeUp) DateTime() {
+	reg := regexp.Compile("")
 }
