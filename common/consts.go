@@ -6,4 +6,8 @@ const (
 
 	DATE_SEPARATER = "/"
 	TIME_SEPARATER = ":"
+
+	WINDOWS_ENV_SEPARATER = ";"
+	LINUX_ENV_SEPARATER   = ":"
+	MACOS_ENV_SEPARATER   = ":"
 )

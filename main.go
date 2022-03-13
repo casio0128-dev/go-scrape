@@ -13,7 +13,8 @@ import (
 
 func main() {
 	d := agouti.ChromeDriver(agouti.ChromeOptions("args", []string{
-		browser.SizeBy(800, 800),
+		//browser.SizeBy(800, 800),
+		browser.IsHeadless(),
 	}))
 
 	if err := d.Start(); err != nil {

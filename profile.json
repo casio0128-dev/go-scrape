@@ -4,12 +4,13 @@
     "operation": {
       "wakeUp": {
         "date": "2022/3/13",
-        "time": "15:14"
+        "time": "18:44"
       },
       "url": "https://google.com",
       "control": [
         { "click": "body > div.L3eUgb > div.o3j99.ikrT4e.om7nvf > form > div:nth-child(1) > div.A8SBwf > div.RNNXgb > div > div.a4bIc > input" },
-        { "input": "JSON" },
+        { "input": "Golang packages" },
+        { "screenShot": "sample.png" },
         { "wait": "1s"},
         { "to": "https://yahoo.co.jp" },
         { "wait": "1s"},

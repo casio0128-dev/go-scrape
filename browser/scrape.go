@@ -8,17 +8,17 @@ import (
 
 func Do(page *agouti.Page, prof *profile.Profile) error {
 	operation := prof.Operation
-	target := operation.Url
-	if err := page.Navigate(target); err != nil {
-		return err
-	}
-
 	if wakeUpTime, err := operation.WakeUpTime.DateTime(); err != nil {
 		return err
 	} else {
 		if time.Now().Before(wakeUpTime) {
 			<-time.After(time.Until(wakeUpTime))
 		}
+	}
+
+	target := operation.Url
+	if err := page.Navigate(target); err != nil {
+		return err
 	}
 
 	var selection *agouti.Selection
