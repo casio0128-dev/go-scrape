@@ -8,19 +8,21 @@ import (
 	"go-scrape/profile"
 	"os"
 	"strings"
-	"time"
 )
 
 func main() {
 	d := agouti.ChromeDriver(agouti.ChromeOptions("args", []string{
-		//browser.SizeBy(800, 800),
-		browser.IsHeadless(),
+		//browser.IsHeadless(),
 	}))
 
 	if err := d.Start(); err != nil {
 		panic(err)
 	}
-	defer d.Stop()
+	defer func() {
+		if err := d.Stop(); err != nil {
+			panic(err)
+		}
+	}()
 
 	page, err := d.NewPage(agouti.Browser("chrome"))
 	if err != nil {
@@ -33,12 +35,6 @@ func main() {
 	if err := browser.Do(page, &(prof[0])); err != nil {
 		panic(err)
 	}
-
-	//if err := page.Navigate("https://google.com"); err != nil {
-	//	panic(err)
-	//}
-	<-time.Tick(10 * time.Second)
-	page.Screenshot("sample.png")
 }
 
 func init() {
@@ -53,11 +49,10 @@ func setDriverPath() error {
 		return err
 	}
 
-	//pathEnv := []string{os.Getenv("PATH"), fmt.Sprintf("%s\\drivers", current)}
-	pathEnv := []string{os.Getenv("PATH"), fmt.Sprintf("%s/drivers", current)}
-	fmt.Println(pathEnv)
-	//return os.Setenv("PATH", strings.Join(pathEnv, ";"))
-	return os.Setenv("PATH", strings.Join(pathEnv, ":"))
+	pathEnv := []string{os.Getenv("PATH"), fmt.Sprintf("%s%sdrivers", current, os.PathSeparator)}
+	fmt.Println("PATH=>", pathEnv, " os.PathSeparator=>", os.PathSeparator, " os.PathListSeparator=>", os.PathListSeparator)
+
+	return os.Setenv("PATH", strings.Join(pathEnv, string(os.PathListSeparator)))
 }
 
 func loadJSON(path string) (interface{}, error) {
