@@ -10,4 +10,5 @@ const (
 	ScreenShot  = "screenShot"
 	To          = "to"
 	Reload      = "reload"
+	Assign      = "assign"
 )

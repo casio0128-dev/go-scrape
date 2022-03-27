@@ -1,6 +1,10 @@
 [
   {
     "name": "1",
+    "var": {
+      "args1": "",
+      "args2": "variable"
+    },
     "operation": {
       "wakeUp": {
         "date": "2022/3/13",

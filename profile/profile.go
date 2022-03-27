@@ -12,7 +12,21 @@ type Profiles []Profile
 
 type Profile struct {
 	Name      string    `json:"name"`
+	Variable  Variable  `json:"var"`
 	Operation Operation `json:"operation"`
+}
+
+type Variable map[string]string
+
+func (v *Variable) get(key string) string {
+	if val, ok := (*v)[key]; ok {
+		return val
+	}
+	return ""
+}
+
+func (v *Variable) set(key, value string) {
+	(*v)[key] = value
 }
 
 type Operation struct {
