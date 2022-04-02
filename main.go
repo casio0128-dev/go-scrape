@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/sclevine/agouti"
-	"go-scrape/browser"
 	"go-scrape/profile"
 	"os"
 	"strings"
@@ -24,17 +23,17 @@ func main() {
 		}
 	}()
 
-	page, err := d.NewPage(agouti.Browser("chrome"))
-	if err != nil {
-		panic(err)
-	}
+	//page, err := d.NewPage(agouti.Browser("chrome"))
+	//if err != nil {
+	//	panic(err)
+	//}
 
 	prof := parse("profile.json")
 	fmt.Println(prof)
 
-	if err := browser.Do(page, &(prof[0])); err != nil {
-		panic(err)
-	}
+	//if err := browser.Do(page, &(prof[0])); err != nil {
+	//	panic(err)
+	//}
 }
 
 func init() {
@@ -49,10 +48,10 @@ func setDriverPath() error {
 		return err
 	}
 
-	pathEnv := []string{os.Getenv("PATH"), fmt.Sprintf("%s%sdrivers", current, os.PathSeparator)}
+	pathEnv := []string{os.Getenv("PATH"), fmt.Sprintf("%s%sdrivers", current, "/")}
 	fmt.Println("PATH=>", pathEnv, " os.PathSeparator=>", os.PathSeparator, " os.PathListSeparator=>", os.PathListSeparator)
 
-	return os.Setenv("PATH", strings.Join(pathEnv, string(os.PathListSeparator)))
+	return os.Setenv("PATH", strings.Join(pathEnv, ":"))
 }
 
 func loadJSON(path string) (interface{}, error) {

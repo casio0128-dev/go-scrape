@@ -2,6 +2,7 @@ package browser
 
 import (
 	"github.com/sclevine/agouti"
+	act "go-scrape/action"
 	"go-scrape/profile"
 	"time"
 )
@@ -25,42 +26,42 @@ func Do(page *agouti.Page, prof *profile.Profile) error {
 	for _, ctrls := range operation.Control {
 		for action, content := range ctrls {
 			switch action {
-			case profile.Click:
+			case act.Click:
 				selection = page.Find(content)
 				if err := selection.Click(); err != nil {
 					return err
 				}
-			case profile.DoubleClick:
+			case act.DoubleClick:
 				if err := selection.DoubleClick(); err != nil {
 					return err
 				}
-			case profile.Input:
+			case act.Input:
 				if err := selection.Fill(content); err != nil {
 					return err
 				}
-			case profile.Select:
+			case act.Select:
 				if err := selection.Select(content); err != nil {
 					return err
 				}
-			case profile.To:
+			case act.To:
 				if err := page.Navigate(content); err != nil {
 					return err
 				}
-			case profile.SendKey:
+			case act.SendKey:
 				if err := selection.SendKeys(content); err != nil {
 					return err
 				}
-			case profile.Reload:
+			case act.Reload:
 				if err := page.Refresh(); err != nil {
 					return err
 				}
-			case profile.Wait:
+			case act.Wait:
 				t, err := time.ParseDuration(content)
 				if err != nil {
 					return err
 				}
 				<-time.Tick(t)
-			case profile.ScreenShot:
+			case act.ScreenShot:
 				if err := page.Screenshot(content); err != nil {
 					return err
 				}
