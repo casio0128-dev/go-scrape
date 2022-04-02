@@ -27,8 +27,10 @@ const (
 )
 
 const (
-	Target = "target"
-	Text   = "text"
+	Target   = "target"
+	Text     = "text"
+	TypKey   = "keys"
+	FileName = "fileName"
 )
 
 type Action interface {
@@ -70,14 +72,22 @@ func ParseAction(name string, args interface{}) Action {
 		}
 	case map[string]string:
 		selector := arg[Target]
-
 		switch name {
 		case Input:
-			return NewInputAction(name, "selector not specify by before selector in click or double click element.", txt)
+			text := arg[Text]
+			return NewInputAction(name, selector, text)
 		case SendKey:
+			keys := arg[TypKey]
+			return NewSendKeyAction(name, selector, keys)
 		case Select:
+			text := arg[Text]
+			return NewSelectAction(name, selector, text)
 		case Upload:
+			fileName := arg[FileName]
+			return NewSelectAction(name, selector, fileName)
 		}
+	case map[string]map[string][]interface{}:
+
 	}
 	return nil
 }
