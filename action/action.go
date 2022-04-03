@@ -86,8 +86,26 @@ func ParseAction(name string, args interface{}) Action {
 			fileName := arg[FileName]
 			return NewSelectAction(name, selector, fileName)
 		}
-	case map[string]map[string][]interface{}:
+	case map[string][]interface{}:
+		switch name {
+		case If:
+			var condMap ConditionMap
+			var acts []Action
+			for conditionKey, values := range arg {
+				for _, value := range values {
+					// TODO: Key名がAction名になっているため取得不可能?
+					// mapの中に "action": "name"に変える必要有り？⇦UXに支障でそう。。
+					act, ok := value.(map[string]interface{})
+					for _, v :=
 
+					if ok {
+						acts = append(acts, ParseAction(act[""]))
+					}
+				}
+			}
+			return NewIfAction(name, condMap)
+
+		}
 	}
 	return nil
 }

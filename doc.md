@@ -172,6 +172,9 @@ type Action struct {
     {"if": {
         "condition1": [
           { "actions": "action contents" }
+        ],
+        "condition2": [
+          { "actions": "action contents" }
         ]
       }
     }

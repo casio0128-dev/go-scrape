@@ -24,3 +24,11 @@ func IsInt(s string) bool {
 	}
 	return true
 }
+
+func GetKeys(m map[string]interface{}) []string {
+	var keys []string
+	for key, _ := range m {
+		keys = append(keys, key)
+	}
+	return keys
+}

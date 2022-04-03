@@ -18,20 +18,20 @@ const (
 // TODO: Condition関連のみファイルを分割する？
 type ConditionMap map[Condition][]Action
 
-func (c ConditionMap) GetKeys() []string {
-	var keys []string
-	for key, _ := range c {
-		keys = append(keys, string(key))
-	}
-	return keys
-}
-
 func (c ConditionMap) GetConditions() []Condition {
 	var conditions []Condition
 	for condition, _ := range c {
 		conditions = append(conditions, condition)
 	}
 	return conditions
+}
+
+func (c ConditionMap) Get(key string) []Action {
+	return c[Condition(key)]
+}
+
+func (c ConditionMap) Set(key string, value []Action) {
+	c[Condition(key)] = value
 }
 
 type Condition string
@@ -89,6 +89,10 @@ func (c Condition) lessThan(left, right string) bool {
 type IfAction struct {
 	name string
 	proc ConditionMap
+}
+
+func NewIfAction(name string, proc ConditionMap) *IfAction {
+	return &IfAction{name: name, proc: proc}
 }
 
 func (ia *IfAction) Name() string {
