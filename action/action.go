@@ -39,9 +39,7 @@ type Action interface {
 	IsActual() bool
 }
 
-func sample() {
-	s := ParseAction(Click, "body")
-}
+var beforeSelector string
 
 func ParseAction(name string, args interface{}) Action {
 	if strings.EqualFold(name, "") || len(name) <= 0 {
@@ -52,8 +50,10 @@ func ParseAction(name string, args interface{}) Action {
 	case string:
 		switch name {
 		case Click:
+			beforeSelector = arg
 			return NewClickAction(name, arg)
 		case DoubleClick:
+			beforeSelector = arg
 			return NewDoubleClickAction(name, arg)
 		case Wait:
 			return NewWaitAction(name, arg)
@@ -72,6 +72,10 @@ func ParseAction(name string, args interface{}) Action {
 		}
 	case map[string]string:
 		selector := arg[Target]
+		if strings.EqualFold(selector, "") {
+			selector = beforeSelector
+		}
+
 		switch name {
 		case Input:
 			text := arg[Text]
@@ -90,18 +94,16 @@ func ParseAction(name string, args interface{}) Action {
 		switch name {
 		case If:
 			var condMap ConditionMap
-			var acts []Action
 			for conditionKey, values := range arg {
+				var acts []Action
 				for _, value := range values {
-					// TODO: Key名がAction名になっているため取得不可能?
-					// mapの中に "action": "name"に変える必要有り？⇦UXに支障でそう。。
-					act, ok := value.(map[string]interface{})
-					for _, v :=
-
-					if ok {
-						acts = append(acts, ParseAction(act[""]))
+					if act, ok := value.(map[string]interface{}); ok {
+						for key, val := range act {
+							acts = append(acts, ParseAction(key, val))
+						}
 					}
 				}
+				condMap.Set(conditionKey, acts)
 			}
 			return NewIfAction(name, condMap)
 
@@ -111,7 +113,7 @@ func ParseAction(name string, args interface{}) Action {
 }
 
 func NotExistsElement(selector string) error {
-	return fmt.Errorf("%s is not find element.\n")
+	return fmt.Errorf("%s is not find element.\n", selector)
 }
 
 func NotActualFormat(name string) error {

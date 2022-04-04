@@ -7,11 +7,20 @@ import (
 )
 
 type AssignAction struct {
-	name     string
-	selector string
-	key      string
-	vars     *profile.Variable
+	name       string
+	selector   string
+	targetType string
+	attrName   string
+
+	key  string
+	vars *profile.Variable
 }
+
+const (
+	TargetTypeText      = "text"
+	TargetTypeTitle     = "title"
+	TargetTypeAttribute = "attribute"
+)
 
 func (aa *AssignAction) Name() string {
 	return aa.name
@@ -20,12 +29,29 @@ func (aa *AssignAction) Name() string {
 func (aa *AssignAction) Do(page *agouti.Page) error {
 	if aa.IsActual() {
 		if selector := page.Find(aa.selector); selector != nil {
-			text, err := selector.Text()
-			if err != nil {
-				aa.vars.Set(aa.key, text)
+			var (
+				content string
+				err     error
+			)
+
+			switch aa.targetType {
+			case TargetTypeText:
+				if content, err = selector.Text(); err != nil {
+					return err
+				}
+			case TargetTypeAttribute:
+				if content, err = selector.Attribute(aa.attrName); err != nil {
+					return err
+				}
+			case TargetTypeTitle:
+				if content, err = page.Title(); err != nil {
+					return err
+				}
 			}
+			aa.vars.Set(aa.key, content)
 		}
 	}
+	return nil
 }
 
 func (aa *AssignAction) IsActual() bool {

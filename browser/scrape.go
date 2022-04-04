@@ -1,6 +1,7 @@
 package browser
 
 import (
+	"fmt"
 	"github.com/sclevine/agouti"
 	act "go-scrape/action"
 	"go-scrape/profile"
@@ -22,49 +23,12 @@ func Do(page *agouti.Page, prof *profile.Profile) error {
 		return err
 	}
 
-	var selection *agouti.Selection
 	for _, ctrls := range operation.Control {
-		for action, content := range ctrls {
-			switch action {
-			case act.Click:
-				selection = page.Find(content)
-				if err := selection.Click(); err != nil {
-					return err
-				}
-			case act.DoubleClick:
-				if err := selection.DoubleClick(); err != nil {
-					return err
-				}
-			case act.Input:
-				if err := selection.Fill(content); err != nil {
-					return err
-				}
-			case act.Select:
-				if err := selection.Select(content); err != nil {
-					return err
-				}
-			case act.To:
-				if err := page.Navigate(content); err != nil {
-					return err
-				}
-			case act.SendKey:
-				if err := selection.SendKeys(content); err != nil {
-					return err
-				}
-			case act.Reload:
-				if err := page.Refresh(); err != nil {
-					return err
-				}
-			case act.Wait:
-				t, err := time.ParseDuration(content)
-				if err != nil {
-					return err
-				}
-				<-time.Tick(t)
-			case act.ScreenShot:
-				if err := page.Screenshot(content); err != nil {
-					return err
-				}
+		for actName, content := range ctrls {
+			action := act.ParseAction(actName, content)
+			fmt.Println(action, actName, content)
+			if err := action.Do(page); err != nil {
+				return err
 			}
 		}
 	}
