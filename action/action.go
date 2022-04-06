@@ -46,6 +46,7 @@ func ParseAction(name string, args interface{}) Action {
 		return nil
 	}
 
+	fmt.Printf("name=> %s, args=> %v, args.(type)=> %T\n", name, args, args)
 	switch arg := args.(type) {
 	case string:
 		switch name {
@@ -58,7 +59,7 @@ func ParseAction(name string, args interface{}) Action {
 		case Wait:
 			return NewWaitAction(name, arg)
 		case ScreenShot:
-			return NewWaitAction(name, arg)
+			return NewScreenShotAction(name, arg)
 		case To:
 			return NewToAction(name, arg)
 		case Cmd:
@@ -70,25 +71,33 @@ func ParseAction(name string, args interface{}) Action {
 		case Clear:
 			return NewClearAction(name)
 		}
-	case map[string]string:
-		selector := arg[Target]
+	case map[string]interface{}:
+		var selector string
+		if target, ok := arg[Target].(string); !ok {
+			selector = target
+		}
 		if strings.EqualFold(selector, "") {
 			selector = beforeSelector
 		}
 
 		switch name {
 		case Input:
-			text := arg[Text]
-			return NewInputAction(name, selector, text)
+			if text, ok := arg[Text].(string); ok {
+				a := NewInputAction(name, selector, text)
+				return a
+			}
 		case SendKey:
-			keys := arg[TypKey]
-			return NewSendKeyAction(name, selector, keys)
+			if keys, ok := arg[TypKey].(string); ok {
+				return NewSendKeyAction(name, selector, keys)
+			}
 		case Select:
-			text := arg[Text]
-			return NewSelectAction(name, selector, text)
+			if text, ok := arg[Text].(string); ok {
+				return NewSelectAction(name, selector, text)
+			}
 		case Upload:
-			fileName := arg[FileName]
-			return NewSelectAction(name, selector, fileName)
+			if fileName, ok := arg[FileName].(string); ok {
+				return NewSelectAction(name, selector, fileName)
+			}
 		}
 	case map[string][]interface{}:
 		switch name {
@@ -109,6 +118,7 @@ func ParseAction(name string, args interface{}) Action {
 
 		}
 	}
+	fmt.Println("DEBUG: Not find action name.")
 	return nil
 }
 
