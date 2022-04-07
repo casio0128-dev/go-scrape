@@ -50,9 +50,9 @@ func setDriverPath() error {
 	}
 
 	pathEnv := []string{os.Getenv("PATH"), fmt.Sprintf("%s%sdrivers", current, string(os.PathSeparator))}
-	fmt.Println("PATH=>", pathEnv, " os.PathSeparator=>", os.PathSeparator, " os.PathListSeparator=>", string(os.PathListSeparator))
+	fmt.Println("PATH=>", pathEnv, " os.PathSeparator=>", string(os.PathSeparator), " os.PathListSeparator=>", string(os.PathListSeparator))
 
-	return os.Setenv("PATH", strings.Join(pathEnv, ";"))
+	return os.Setenv("PATH", strings.Join(pathEnv, string(os.PathListSeparator)))
 }
 
 func loadJSON(path string) (interface{}, error) {
