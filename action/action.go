@@ -3,6 +3,7 @@ package action
 import (
 	"fmt"
 	"github.com/sclevine/agouti"
+	"go-scrape/profile"
 	"strings"
 )
 
@@ -41,7 +42,7 @@ type Action interface {
 
 var beforeSelector string
 
-func ParseAction(name string, args interface{}) Action {
+func ParseAction(name string, prof *profile.Profile, args interface{}) Action {
 	if strings.EqualFold(name, "") || len(name) <= 0 {
 		return nil
 	}
@@ -109,11 +110,15 @@ func ParseAction(name string, args interface{}) Action {
 				for _, value := range values {
 					if act, ok := value.(map[string]interface{}); ok {
 						for key, val := range act {
-							acts = append(acts, ParseAction(key, val))
+							acts = append(acts, ParseAction(key, prof, val))
 						}
 					}
 				}
-				condMap.Set(conditionKey, acts)
+				if parsedConditionKey, err := profile.Parse(conditionKey, prof.Variable); err == nil {
+					condMap.Set(parsedConditionKey, acts)
+				} else {
+					continue
+				}
 			}
 			return NewIfAction(name, condMap)
 		}

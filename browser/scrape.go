@@ -24,7 +24,7 @@ func Do(page *agouti.Page, prof *profile.Profile) error {
 
 	for _, ctrls := range operation.Control {
 		for actName, content := range ctrls {
-			action := act.ParseAction(actName, content)
+			action := act.ParseAction(actName, prof, content)
 			if err := action.Do(page); err != nil {
 				return err
 			}
