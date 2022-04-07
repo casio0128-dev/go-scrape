@@ -9,8 +9,8 @@ import (
 )
 
 const (
-	_EQUAL        = "="
-	_NOT_EQUAL    = "!"
+	_EQUAL        = "=="
+	_NOT_EQUAL    = "!="
 	_GREATER_THAN = ">"
 	_LESS_THAN    = "<"
 )
@@ -40,7 +40,7 @@ func (c ConditionMap) Set(key string, value []Action) {
 
 type Condition string
 
-const REGEX_PATTERN = `[==|!=|>|<|]`
+const REGEX_PATTERN = `==|!=`
 
 func (c Condition) Expr() bool {
 	regex, err := regexp.Compile(REGEX_PATTERN)
@@ -54,9 +54,9 @@ func (c Condition) Expr() bool {
 		return c.equal(formula[0], formula[1])
 	case _NOT_EQUAL:
 		return c.notEqual(formula[0], formula[1])
-	case _GREATER_THAN:
+	case _GREATER_THAN: // un used.
 		return c.greaterThan(formula[0], formula[1])
-	case _LESS_THAN:
+	case _LESS_THAN: // un used.
 		return c.lessThan(formula[0], formula[1])
 	}
 	return false

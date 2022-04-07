@@ -23,8 +23,10 @@ const (
 	Select  = "select"
 	Upload  = "upload"
 
-	Assign = "assign"
-	If     = "if"
+	AssignText  = "assign-text"
+	AssignTitle = "assign-title"
+	AssignAttr  = "assign-attr"
+	If          = "if"
 )
 
 const (
@@ -32,6 +34,8 @@ const (
 	Text     = "text"
 	TypKey   = "keys"
 	FileName = "fileName"
+	VarName  = "VarName"
+	AttrName = "AttrName"
 )
 
 type Action interface {
@@ -70,6 +74,8 @@ func ParseAction(name string, prof *profile.Profile, args interface{}) Action {
 			return NewExitAction(name)
 		case Clear:
 			return NewClearAction(name)
+		case AssignTitle:
+			return NewAssignTitleAction(name, arg, &prof.Variable)
 		}
 	case map[string]interface{}:
 		var selector string
@@ -97,6 +103,16 @@ func ParseAction(name string, prof *profile.Profile, args interface{}) Action {
 		case Upload:
 			if fileName, ok := arg[FileName].(string); ok {
 				return NewSelectAction(name, selector, fileName)
+			}
+		case AssignText:
+			if varName, ok := arg[VarName].(string); ok {
+				return NewAssignTextAction(name, selector, varName, &prof.Variable)
+			}
+		case AssignAttr:
+			if varName, ok := arg[VarName].(string); ok {
+				if attrName, ok := arg[AttrName].(string); ok {
+					return NewAssignAttrAction(name, selector, attrName, varName, &prof.Variable)
+				}
 			}
 		case If:
 			condMap := NewConditionMap()
