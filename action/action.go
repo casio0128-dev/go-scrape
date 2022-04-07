@@ -98,16 +98,20 @@ func ParseAction(name string, args interface{}) Action {
 			if fileName, ok := arg[FileName].(string); ok {
 				return NewSelectAction(name, selector, fileName)
 			}
-		}
-	case map[string][]interface{}:
-		switch name {
 		case If:
+			fmt.Printf("name => %s, arg=> %s, arg.(type)=>%T\n", name, arg, arg)
 			var condMap ConditionMap
-			for conditionKey, values := range arg {
+			for conditionKey, actionValues := range arg {
 				var acts []Action
+				values, ok := actionValues.([]interface{})
+				if !ok {
+					return nil
+				}
+
 				for _, value := range values {
 					if act, ok := value.(map[string]interface{}); ok {
 						for key, val := range act {
+							fmt.Println("key`d`value => ", key, val)
 							acts = append(acts, ParseAction(key, val))
 						}
 					}
@@ -115,7 +119,6 @@ func ParseAction(name string, args interface{}) Action {
 				condMap.Set(conditionKey, acts)
 			}
 			return NewIfAction(name, condMap)
-
 		}
 	}
 	fmt.Println("DEBUG: Not find action name.")
