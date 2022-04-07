@@ -9,14 +9,18 @@ import (
 )
 
 const (
-	_EQUAL        = "=="
-	_NOT_EQUAL    = "!="
+	_EQUAL        = "="
+	_NOT_EQUAL    = "!"
 	_GREATER_THAN = ">"
 	_LESS_THAN    = "<"
 )
 
 // TODO: Condition関連のみファイルを分割する？
 type ConditionMap map[Condition][]Action
+
+func NewConditionMap() ConditionMap {
+	return make(ConditionMap)
+}
 
 func (c ConditionMap) GetConditions() []Condition {
 	var conditions []Condition

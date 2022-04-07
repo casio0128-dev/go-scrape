@@ -46,7 +46,6 @@ func ParseAction(name string, args interface{}) Action {
 		return nil
 	}
 
-	fmt.Printf("name=> %s, args=> %v, args.(type)=> %T\n", name, args, args)
 	switch arg := args.(type) {
 	case string:
 		switch name {
@@ -99,8 +98,7 @@ func ParseAction(name string, args interface{}) Action {
 				return NewSelectAction(name, selector, fileName)
 			}
 		case If:
-			fmt.Printf("name => %s, arg=> %s, arg.(type)=>%T\n", name, arg, arg)
-			var condMap ConditionMap
+			condMap := NewConditionMap()
 			for conditionKey, actionValues := range arg {
 				var acts []Action
 				values, ok := actionValues.([]interface{})
@@ -111,7 +109,6 @@ func ParseAction(name string, args interface{}) Action {
 				for _, value := range values {
 					if act, ok := value.(map[string]interface{}); ok {
 						for key, val := range act {
-							fmt.Println("key`d`value => ", key, val)
 							acts = append(acts, ParseAction(key, val))
 						}
 					}
