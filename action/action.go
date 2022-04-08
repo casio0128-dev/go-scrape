@@ -34,8 +34,8 @@ const (
 	Text     = "text"
 	TypKey   = "keys"
 	FileName = "fileName"
-	VarName  = "VarName"
-	AttrName = "AttrName"
+	VarName  = "var"
+	AttrName = "attr"
 )
 
 type Action interface {
@@ -79,7 +79,7 @@ func ParseAction(name string, prof *profile.Profile, args interface{}) Action {
 		}
 	case map[string]interface{}:
 		var selector string
-		if target, ok := arg[Target].(string); !ok {
+		if target, ok := arg[Target].(string); ok {
 			selector = target
 		}
 		if strings.EqualFold(selector, "") {

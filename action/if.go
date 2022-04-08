@@ -18,24 +18,24 @@ const (
 // TODO: Condition関連のみファイルを分割する？
 type ConditionMap map[Condition][]Action
 
-func NewConditionMap() ConditionMap {
-	return make(ConditionMap)
+func NewConditionMap() *ConditionMap {
+	return &ConditionMap{}
 }
 
-func (c ConditionMap) GetConditions() []Condition {
+func (c *ConditionMap) GetConditions() []Condition {
 	var conditions []Condition
-	for condition, _ := range c {
+	for condition, _ := range *c {
 		conditions = append(conditions, condition)
 	}
 	return conditions
 }
 
-func (c ConditionMap) Get(key string) []Action {
-	return c[Condition(key)]
+func (c *ConditionMap) Get(key string) []Action {
+	return (*c)[Condition(key)]
 }
 
-func (c ConditionMap) Set(key string, value []Action) {
-	c[Condition(key)] = value
+func (c *ConditionMap) Set(key string, value []Action) {
+	(*c)[Condition(key)] = value
 }
 
 type Condition string
@@ -92,10 +92,10 @@ func (c Condition) lessThan(left, right string) bool {
 
 type IfAction struct {
 	name string
-	proc ConditionMap
+	proc *ConditionMap
 }
 
-func NewIfAction(name string, proc ConditionMap) *IfAction {
+func NewIfAction(name string, proc *ConditionMap) *IfAction {
 	return &IfAction{name: name, proc: proc}
 }
 
@@ -107,7 +107,7 @@ func (ia *IfAction) Do(page *agouti.Page) error {
 	if ia.IsActual() {
 		for _, condition := range ia.proc.GetConditions() {
 			if condition.Expr() {
-				for _, act := range ia.proc[condition] {
+				for _, act := range (*ia.proc)[condition] {
 					if err := act.Do(page); err != nil {
 						return err
 					}
@@ -123,7 +123,7 @@ func (ia *IfAction) IsActual() bool {
 	if !strings.EqualFold(ia.name, "if") {
 		return false
 	}
-	if len(ia.proc) <= 0 {
+	if len(*ia.proc) <= 0 {
 		return false
 	}
 	return true

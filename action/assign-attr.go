@@ -37,7 +37,7 @@ func (aa *AssignAttrAction) Do(page *agouti.Page) error {
 }
 
 func (aa *AssignAttrAction) IsActual() bool {
-	if !strings.EqualFold(aa.name, "assign") {
+	if !strings.EqualFold(aa.name, "assign-attr") {
 		return false
 	}
 	if strings.EqualFold(aa.selector, "") {

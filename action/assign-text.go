@@ -1,6 +1,7 @@
 package action
 
 import (
+	"fmt"
 	"github.com/sclevine/agouti"
 	"go-scrape/profile"
 	"strings"
@@ -29,6 +30,7 @@ func (aa *AssignTextAction) Do(page *agouti.Page) error {
 			if err != nil {
 				return err
 			}
+			fmt.Println("aa.vars.Set(aa.key, t)", aa.vars)
 			aa.vars.Set(aa.key, t)
 		}
 	}
@@ -36,7 +38,8 @@ func (aa *AssignTextAction) Do(page *agouti.Page) error {
 }
 
 func (aa *AssignTextAction) IsActual() bool {
-	if !strings.EqualFold(aa.name, "assign") {
+	fmt.Println(aa.name, aa.key, aa.selector, *aa.vars)
+	if !strings.EqualFold(aa.name, "assign-text") {
 		return false
 	}
 	if strings.EqualFold(aa.selector, "") {
