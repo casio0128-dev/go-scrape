@@ -34,3 +34,15 @@ func Parse(str string, vars Variable) (string, error) {
 	}
 	return result, nil
 }
+
+// TODO: Parseと同様の処理を一部Actionに追加する
+func parseDate() {
+	dateReg, _ := regexp.Compile(`{(Y{4})}|{(M{1,2})}|{(D{1,2})}|{(W{1,2})}`)
+
+	fmt.Println(dateReg.FindAllStringSubmatch(`{YYYY}/{MM}/{DD}`, -1))
+	fmt.Println(dateReg.FindAllStringSubmatch(`{YYYY}/{M}/{D}`, -1))
+	fmt.Println(dateReg.FindAllStringSubmatch(`{YYYY}/{M}/{DD}`, -1))
+	fmt.Println(dateReg.FindAllStringSubmatch(`{YYYY}/{MM}/{D}`, -1))
+	fmt.Println(dateReg.FindAllStringSubmatch(`{YYYY}{MM}{DD}{WW}`, -1))
+	fmt.Println(dateReg.FindAllStringSubmatch(`{YYYY}-{M}-{D}({W})`, -1))
+}
