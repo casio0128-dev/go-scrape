@@ -55,19 +55,39 @@ func ParseAction(name string, prof *profile.Profile, args interface{}) Action {
 	case string:
 		switch name {
 		case Click:
-			beforeSelector = arg
-			return NewClickAction(name, arg)
+			if arg, err := parseVariables(arg, prof); err != nil {
+				return nil
+			} else {
+				beforeSelector = arg
+				return NewClickAction(name, arg)
+			}
 		case DoubleClick:
-			beforeSelector = arg
-			return NewDoubleClickAction(name, arg)
+			if arg, err := parseVariables(arg, prof); err != nil {
+				return nil
+			} else {
+				beforeSelector = arg
+				return NewDoubleClickAction(name, arg)
+			}
 		case Wait:
 			return NewWaitAction(name, arg)
 		case ScreenShot:
-			return NewScreenShotAction(name, arg)
+			if arg, err := parseVariables(arg, prof); err != nil {
+				return nil
+			} else {
+				return NewScreenShotAction(name, arg)
+			}
 		case To:
-			return NewToAction(name, arg)
+			if arg, err := parseVariables(arg, prof); err != nil {
+				return nil
+			} else {
+				return NewToAction(name, arg)
+			}
 		case Cmd:
-			return NewCmdAction(name, arg)
+			if arg, err := parseVariables(arg, prof); err != nil {
+				return nil
+			} else {
+				return NewCmdAction(name, arg)
+			}
 		case Reload:
 			return NewReloadAction(name)
 		case Exit:
@@ -85,12 +105,20 @@ func ParseAction(name string, prof *profile.Profile, args interface{}) Action {
 		if strings.EqualFold(selector, "") {
 			selector = beforeSelector
 		}
+		if selector, err := parseVariables(selector, prof); err != nil {
+			return nil
+		} else {
+			selector = selector
+		}
 
 		switch name {
 		case Input:
 			if text, ok := arg[Text].(string); ok {
-				a := NewInputAction(name, selector, text)
-				return a
+				if text, err := parseVariables(text, prof); err != nil {
+					return nil
+				} else {
+					return NewInputAction(name, selector, text)
+				}
 			}
 		case SendKey:
 			if keys, ok := arg[TypKey].(string); ok {
@@ -102,7 +130,11 @@ func ParseAction(name string, prof *profile.Profile, args interface{}) Action {
 			}
 		case Upload:
 			if fileName, ok := arg[FileName].(string); ok {
-				return NewSelectAction(name, selector, fileName)
+				if fileName, err := parseVariables(fileName, prof); err != nil {
+					return nil
+				} else {
+					return NewSelectAction(name, selector, fileName)
+				}
 			}
 		case AssignText:
 			if varName, ok := arg[VarName].(string); ok {
@@ -141,6 +173,14 @@ func ParseAction(name string, prof *profile.Profile, args interface{}) Action {
 	}
 	fmt.Println("DEBUG: Not find action name.")
 	return nil
+}
+
+func parseVariables(str string, prof *profile.Profile) (string, error) {
+	if parsed, err := profile.Parse(str, prof.Variable); err != nil {
+		return "", err
+	} else {
+		return parsed, nil
+	}
 }
 
 func NotExistsElement(selector string) error {

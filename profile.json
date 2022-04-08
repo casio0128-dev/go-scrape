@@ -25,7 +25,7 @@
               {
                 "input": {
                   "target": "",
-                  "text": "Gmail"
+                  "text": "{TEST}_PARSED"
                 }
               },
               {"screenShot": "if-success-cond1.png"}

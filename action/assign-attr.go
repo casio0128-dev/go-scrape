@@ -46,5 +46,8 @@ func (aa *AssignAttrAction) IsActual() bool {
 	if strings.EqualFold(aa.key, "") {
 		return false
 	}
+	if strings.EqualFold(aa.attrName, "") {
+		return false
+	}
 	return true
 }
