@@ -3,33 +3,38 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/sclevine/agouti"
+	"go-scrape/browser"
 	"go-scrape/profile"
 	"os"
 	"strings"
 )
 
 func main() {
-	//d := agouti.ChromeDriver(agouti.ChromeOptions("args", []string{
-	//	browser.SizeBy(800, 800),
-	//}))
-	//
-	//if err := d.Start(); err != nil {
-	//	panic(err)
-	//}
-	//defer d.Stop()
-	//
-	//page, err := d.NewPage(agouti.Browser("chrome"))
-	//if err != nil {
-	//	panic(err)
-	//}
+	d := agouti.ChromeDriver(agouti.ChromeOptions("args", []string{
+		//browser.IsHeadless(),
+	}))
 
-	fmt.Println(parse("profile.json")[0])
+	if err := d.Start(); err != nil {
+		panic(err)
+	}
+	defer func() {
+		if err := d.Stop(); err != nil {
+			panic(err)
+		}
+	}()
 
-	//if err := page.Navigate("https://google.com"); err != nil {
-	//	panic(err)
-	//}
-	//<-time.Tick(15 * time.Second)
-	//page.Screenshot("sample.png")
+	page, err := d.NewPage(agouti.Browser("chrome"))
+	if err != nil {
+		panic(err)
+	}
+
+	prof := parse("profile.json")
+	fmt.Println(prof)
+
+	if err := browser.Do(page, &(prof[0])); err != nil {
+		panic(err)
+	}
 }
 
 func init() {
@@ -44,8 +49,10 @@ func setDriverPath() error {
 		return err
 	}
 
-	pathEnv := []string{os.Getenv("PATH"), fmt.Sprintf("%s\\drivers", current)}
-	return os.Setenv("PATH", strings.Join(pathEnv, ";"))
+	pathEnv := []string{os.Getenv("PATH"), fmt.Sprintf("%s%sdrivers", current, string(os.PathSeparator))}
+	fmt.Println("PATH=>", pathEnv, " os.PathSeparator=>", string(os.PathSeparator), " os.PathListSeparator=>", string(os.PathListSeparator))
+
+	return os.Setenv("PATH", strings.Join(pathEnv, string(os.PathListSeparator)))
 }
 
 func loadJSON(path string) (interface{}, error) {

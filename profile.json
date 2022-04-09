@@ -1,38 +1,66 @@
 [
   {
     "name": "1",
+    "var": {
+      "SAMPLE": "condition",
+      "args1": "",
+      "args2": "variable"
+    },
     "operation": {
-      "wakeUp": "2022/03/10",
+      "wakeUp": {
+        "date": "",
+        "time": ""
+      },
       "url": "https://google.com",
       "control": [
+        { "assign-title":  "TITLE"},
+        { "assign-text": {
+          "target": "#gb > div > div:nth-child(1) > div > div:nth-child(1) > a",
+          "var": "TEST"
+        }},
+        { "click": "body > div.L3eUgb > div.o3j99.ikrT4e.om7nvf > form > div:nth-child(1) > div.A8SBwf > div.RNNXgb > div > div.a4bIc > input" },
+        { "input": {
+          "target": "",
+          "text": "{ss} 祝日"
+        }},
+        { "wait": "5s"},
+        { "click": "body > div.L3eUgb > div.o3j99.ikrT4e.om7nvf > form > div:nth-child(1) > div.A8SBwf > div.FPdoLc.lJ9FBc > center > input.gNO89b"},
         {
-          "input": "JSON"
+          "if": {
+            "{TEST}==Gmail": [
+              {
+                "input": {
+                  "target": "",
+                  "text": "{TEST}_PARSED"
+                }
+              },
+              {"screenShot": "if-success-cond1.png"}
+            ],
+            "conditions==condition": [
+              {
+                "input": {
+                  "target": "",
+                  "text": "Condition2"
+                }
+              },
+              {"screenShot": "if-success-cond2-SASA.png"}
+            ]
+          }
         },
-        {
-          "wait": "1000"
-        },
-        {
-          "click": "JSON"
-        }
+        { "wait": "5s"},
+        { "to": "https://google.com"},
+        { "click": "body > div.L3eUgb > div.o3j99.ikrT4e.om7nvf > form > div:nth-child(1) > div.A8SBwf > div.RNNXgb > div > div.a4bIc > input" },
+        { "input": {
+          "target":"",
+          "text": "Golang Packages"
+        }},
+        { "screenShot": "sample.png" },
+        { "wait": "1s"},
+        { "to": "https://yahoo.co.jp" },
+        { "wait": "1s"},
+        { "click": "#ContentWrapper > header > section._1o9PYyvuVafb5hd9eJ9rYX > div > form > fieldset > span > input"},
+        { "screenShot": "sample2.png" }
       ]
     }
-  },
-  {
-    "name": "2",
-    "operation": {
-      "wakeUp": "2022/03/10",
-      "url": "https://yahoo.co.jp",
-      "control": [
-        {
-          "input": "JSON"
-        },
-        {
-          "wait": "1000"
-        },
-        {
-          "click": "JSON"
-        }
-      ]
-    }
-  },
+  }
 ]
