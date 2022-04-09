@@ -49,8 +49,8 @@ func setDriverPath() error {
 		return err
 	}
 
-	pathEnv := []string{os.Getenv("PATH"), fmt.Sprintf("%s%sdrivers", current, os.PathSeparator)}
-	fmt.Println("PATH=>", pathEnv, " os.PathSeparator=>", os.PathSeparator, " os.PathListSeparator=>", os.PathListSeparator)
+	pathEnv := []string{os.Getenv("PATH"), fmt.Sprintf("%s%sdrivers", current, string(os.PathSeparator))}
+	fmt.Println("PATH=>", pathEnv, " os.PathSeparator=>", string(os.PathSeparator), " os.PathListSeparator=>", string(os.PathListSeparator))
 
 	return os.Setenv("PATH", strings.Join(pathEnv, string(os.PathListSeparator)))
 }
