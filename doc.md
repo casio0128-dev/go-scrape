@@ -57,8 +57,11 @@
    - varのオプションを追加
      - オプションの内容
        - {args1}、{ARGS1}等で置換可能
-       - "args" [{ "args1": "args1 content" }, { "ARGS1": "ARGS1 content" }]
+       - "var" [{ "variable": "variable content" }, { "ARGS1": "ARGS1 content" }]
      - repeatの繰り返し回数ごと({N})等で痴漢できるようにする
+     - "assign"でセレクタの結果を代入
+       - **operation内の書き方を再考しないと使いやすさに影響有り**
+       - `"assign": { "${variableName}": "CSS selector" }` 
    - 条件分岐の考慮
 2. アクションの追加
    - get
@@ -136,4 +139,45 @@ type Action struct {
 	contents string
 }
 
+```
+
+- 案3
+```json
+{
+  "control": [
+    {"click": "CSS Selector"},
+    {"doubleClick": "CSS Selector"},
+    {"input": {
+      "target": "CSS Selector",
+      "text": "input text"
+    }},
+    {"select": {
+      "target": "CSS Selector",
+      "text": "select target text"
+    }},
+    {"sendKey": "want send key"},
+    {"wait": "wait time"},
+    {"screenShot": "save path"},
+    {"reload": ""},
+    
+    <!-- ↓新規追加分 -->
+    {"exit": ""},
+    {"cmd": ""},
+    {"assign-text": { 
+      "variableName": "CSS Selector"
+    }},
+    {"assign-value": { 
+      "variableName": "CSS Selector"
+    }},
+    {"if": {
+        "condition1": [
+          { "actions": "action contents" }
+        ],
+        "condition2": [
+          { "actions": "action contents" }
+        ]
+      }
+    }
+  ]
+}
 ```
