@@ -1,6 +1,7 @@
 [
   {
     "name": "1",
+    "targetIs": "XPath",
     "var": {
       "SAMPLE": "condition",
       "args1": "",
