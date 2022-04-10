@@ -10,7 +10,7 @@ type SelectAction struct {
 	selector, text string
 }
 
-func NewSelectAction(name string, selector string, text string) *SelectAction {
+func NewSelectAction(name string, selector *agouti.Selection, text string) *SelectAction {
 	return &SelectAction{name: name, selector: selector, text: text}
 }
 

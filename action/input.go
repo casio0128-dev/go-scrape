@@ -10,7 +10,7 @@ type InputAction struct {
 	selector, text string
 }
 
-func NewInputAction(name string, selector string, text string) *InputAction {
+func NewInputAction(name string, selector *agouti.Selection, text string) *InputAction {
 	return &InputAction{name: name, selector: selector, text: text}
 }
 

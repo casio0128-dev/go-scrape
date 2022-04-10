@@ -7,10 +7,10 @@ import (
 
 type ClickAction struct {
 	name     string
-	selector string
+	selector *agouti.Selection
 }
 
-func NewClickAction(name, selector string) *ClickAction {
+func NewClickAction(name string, selector *agouti.Selection) *ClickAction {
 	return &ClickAction{name: name, selector: selector}
 }
 
@@ -18,18 +18,18 @@ func (ca *ClickAction) Name() string {
 	return ca.name
 }
 
-func (ca *ClickAction) Do(page *agouti.Page) error {
-	if selection := page.Find(ca.selector); selection != nil {
-		return selection.Click()
+func (ca *ClickAction) Do(_ *agouti.Page) error {
+	if ca.IsActual() {
+		return ca.selector.Click()
 	}
-	return NotExistsElement(ca.selector)
+	return NotExistsElement(ca.selector.Selectors().String())
 }
 
 func (ca *ClickAction) IsActual() bool {
 	if !strings.EqualFold(ca.name, "click") {
 		return false
 	}
-	if strings.EqualFold(ca.selector, "") {
+	if ca.selector == nil {
 		return false
 	}
 	return true

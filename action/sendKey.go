@@ -10,7 +10,7 @@ type SendKeyAction struct {
 	selector, key string
 }
 
-func NewSendKeyAction(name string, selector string, key string) *SendKeyAction {
+func NewSendKeyAction(name string, selector *agouti.Selection, key string) *SendKeyAction {
 	return &SendKeyAction{name: name, selector: selector, key: key}
 }
 

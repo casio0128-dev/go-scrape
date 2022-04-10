@@ -175,6 +175,16 @@ func ParseAction(name string, prof *profile.Profile, args interface{}) Action {
 	return nil
 }
 
+func find(page *agouti.Page, prof *profile.Profile) func(string) *agouti.Selection {
+	switch prof.TargetType {
+	case profile.IsXPath:
+		return page.FindByXPath
+	case profile.IsCSSSelector:
+		return page.Find
+	}
+	return page.Find
+}
+
 func parseVariables(str string, prof *profile.Profile) (string, error) {
 	if parsed, err := profile.Parse(str, prof.Variable); err != nil {
 		return "", err

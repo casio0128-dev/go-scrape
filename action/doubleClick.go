@@ -7,10 +7,10 @@ import (
 
 type DoubleClickAction struct {
 	name     string
-	selector string
+	selector *agouti.Selection
 }
 
-func NewDoubleClickAction(name string, selector string) *DoubleClickAction {
+func NewDoubleClickAction(name string, selector *agouti.Selection) *DoubleClickAction {
 	return &DoubleClickAction{name: name, selector: selector}
 }
 
@@ -18,18 +18,18 @@ func (dca *DoubleClickAction) Name() string {
 	return dca.name
 }
 
-func (dca *DoubleClickAction) Do(page *agouti.Page) error {
-	if selection := page.Find(dca.selector); selection != nil {
-		return selection.Click()
+func (dca *DoubleClickAction) Do(_ *agouti.Page) error {
+	if dca.IsActual() {
+		return dca.selector.DoubleClick()
 	}
-	return NotExistsElement(dca.selector)
+	return NotExistsElement(dca.selector.String())
 }
 
 func (dca *DoubleClickAction) IsActual() bool {
 	if !strings.EqualFold(dca.name, "doubleClick") {
 		return false
 	}
-	if strings.EqualFold(dca.selector, "") {
+	if dca.selector == nil {
 		return false
 	}
 	return true

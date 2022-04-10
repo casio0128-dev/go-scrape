@@ -8,7 +8,7 @@ import (
 
 type AssignAction struct {
 	name       string
-	selector   string
+	selector   *agouti.Selection
 	targetType string
 	attrName   string
 
@@ -28,28 +28,26 @@ func (aa *AssignAction) Name() string {
 
 func (aa *AssignAction) Do(page *agouti.Page) error {
 	if aa.IsActual() {
-		if selector := page.Find(aa.selector); selector != nil {
-			var (
-				content string
-				err     error
-			)
+		var (
+			content string
+			err     error
+		)
 
-			switch aa.targetType {
-			case TargetTypeText:
-				if content, err = selector.Text(); err != nil {
-					return err
-				}
-			case TargetTypeAttribute:
-				if content, err = selector.Attribute(aa.attrName); err != nil {
-					return err
-				}
-			case TargetTypeTitle:
-				if content, err = page.Title(); err != nil {
-					return err
-				}
+		switch aa.targetType {
+		case TargetTypeText:
+			if content, err = aa.selector.Text(); err != nil {
+				return err
 			}
-			aa.vars.Set(aa.key, content)
+		case TargetTypeAttribute:
+			if content, err = aa.selector.Attribute(aa.attrName); err != nil {
+				return err
+			}
+		case TargetTypeTitle:
+			if content, err = page.Title(); err != nil {
+				return err
+			}
 		}
+		aa.vars.Set(aa.key, content)
 	}
 	return nil
 }
@@ -58,7 +56,7 @@ func (aa *AssignAction) IsActual() bool {
 	if !strings.EqualFold(aa.name, "assign") {
 		return false
 	}
-	if strings.EqualFold(aa.selector, "") {
+	if aa.selector == nil {
 		return false
 	}
 	if strings.EqualFold(aa.key, "") {
