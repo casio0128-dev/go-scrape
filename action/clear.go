@@ -19,7 +19,13 @@ func (ca *ClearAction) Name() string {
 
 func (ca *ClearAction) Do(page *agouti.Page) error {
 	if ca.IsActual() {
-		return page.ClearCookies()
+		if err := page.Session().Refresh(); err != nil {
+			return err
+		}
+		if err := page.ClearCookies(); err != nil {
+			return err
+		}
+		return nil
 	}
 	return NotActualFormat(ca.name)
 }
