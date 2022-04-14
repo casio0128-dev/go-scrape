@@ -1,5 +1,14 @@
 package browser
 
+import (
+	"fmt"
+	"strings"
+)
+
+func MakeScript(scripts ...string) string {
+	return strings.Join(scripts, ";")
+}
+
 func GetXPath() string {
 	return `function getXpath(element) {
 	  if(element && element.parentNode) {
@@ -24,4 +33,47 @@ func GetXPath() string {
 		return '';
 	  }
 	}`
+}
+
+func Post() string {
+	return `function postXPath(url, act, path, content) {
+			const req = {
+				action: act,
+				target: path,
+				content: content,
+				currentHref: location.href
+			}
+
+			var request = new XMLHttpRequest();
+			request.open('POST', url);
+			request.onreadystatechange = function () {
+				if (request.readyState != 4) {
+					// リクエスト中
+					console.log("requesting now.");
+				} else if (request.status != 200) {
+					// 失敗
+					console.log("requesting failure.");
+				} else {
+				// 送信成功
+					var result = request.responseText;
+					console.log("requesting success.");
+					console.log(result);
+				}
+			};
+			request.setRequestHeader('Content-Type', 'application/json');
+			console.log(req);
+			request.send(JSON.stringify(req));
+		}
+	`
+}
+
+func SetEventListener(url string) string {
+	return fmt.Sprintf(`
+		document.addEventListener('click', function(e){
+			postXPath("%s", 'click', getXpath(e.target), '',);
+		});
+		document.addEventListener('input', function(e){
+			postXPath("%[1]s", 'input', getXpath(e.target), e.target.value);
+		});
+	`, url)
 }

@@ -6,11 +6,15 @@ import (
 	"github.com/sclevine/agouti"
 	"go-scrape/browser"
 	"go-scrape/profile"
+	"go-scrape/record"
 	"os"
 	"strings"
 )
 
 func main() {
+	go record.Run()
+	go record.Recorder()
+
 	d := agouti.ChromeDriver(agouti.ChromeOptions("args", []string{
 		//browser.IsHeadless(),
 	}))

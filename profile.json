@@ -14,8 +14,8 @@
       },
       "url": "https://google.com",
       "control": [
+        { "wait": "5m" },
         { "assign-title":  "TITLE"},
-        { "wait": "1s" },
         { "assign-text": {
           "target": "#gb > div > div:nth-child(1) > div > div:nth-child(1) > a",
           "var": "TEST"
