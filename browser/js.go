@@ -75,5 +75,12 @@ func SetEventListener(url string) string {
 		document.addEventListener('input', function(e){
 			postXPath("%[1]s", 'input', getXpath(e.target), e.target.value);
 		});
+
+		let selects = document.getElementsByTagName("select");
+		for (let i = 0; i < selects.length; i++) {
+			selects[i].addEventListener('change', function(e){
+				postXPath("%[1]s", 'select', getXpath(e.target), e.target.value);
+			});
+		}
 	`, url)
 }
