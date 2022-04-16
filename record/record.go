@@ -7,6 +7,7 @@ import (
 	"github.com/sclevine/agouti"
 	"go-scrape/browser"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 )
@@ -71,13 +72,30 @@ type operationRequest struct {
 	Content     string `json:"content"`
 	Target      string `json:"target"`
 	CurrentHref string `json:"currentHref"`
+
+	createdAt time.Time
 }
 
-func indexHandler(c echo.Context) error {
+type Recorder struct {
+	Requests *[]operationRequest
+}
+
+func (r *Recorder) PushRequest(or *operationRequest) {
+	or.createdAt = time.Now()
+	*r.Requests = append(*r.Requests, *or)
+}
+
+func NewRecorder() *Recorder {
+	return &Recorder{
+		Requests: new([]operationRequest),
+	}
+}
+
+func (r *Recorder) indexHandler(c echo.Context) error {
 	return c.String(http.StatusOK, "index")
 }
 
-func recHandler(c echo.Context) error {
+func (r *Recorder) recHandler(c echo.Context) error {
 	or := new(operationRequest)
 	if err := c.Bind(or); err != nil {
 		return err
@@ -88,17 +106,26 @@ func recHandler(c echo.Context) error {
 	fmt.Println("content", or.Content)
 	fmt.Println("currentHref", or.CurrentHref)
 
-	return c.JSON(http.StatusOK, or)
+	r.PushRequest(or)
+
+	return c.JSON(http.StatusOK, r.Requests)
 }
 
-func Recorder() {
+func Recording() {
 	e := echo.New()
 	e.HideBanner = true
 	e.Use(middleware.CORS())
 	e.Use(middleware.Logger())
 
-	e.GET("/", indexHandler)
-	e.POST("/rec", recHandler)
+	rec := NewRecorder()
+	e.GET("/", rec.indexHandler)
+	e.POST("/rec", rec.recHandler)
+
+	defer func() {
+		echoLog := e.Logger.Output()
+
+		f, e := os.Create(time.Now().Format("server_20060102150405.log"))
+	}
 
 	if err := e.Start(":1323"); err != nil {
 		panic(err)
