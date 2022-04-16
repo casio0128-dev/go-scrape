@@ -15,6 +15,9 @@ import (
 const url = "http://localhost:1323/rec"
 
 func Run() {
+	recorder := NewRecorder()
+	go Recording(recorder)
+
 	d := agouti.ChromeDriver(agouti.ChromeOptions("args", []string{
 		//browser.IsHeadless(),
 	}))
@@ -78,6 +81,9 @@ type operationRequest struct {
 
 type Recorder struct {
 	Requests *[]operationRequest
+
+	requestCh chan<- operationRequest
+	finCh     chan interface{}
 }
 
 func (r *Recorder) PushRequest(or *operationRequest) {
@@ -111,21 +117,27 @@ func (r *Recorder) recHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, r.Requests)
 }
 
-func Recording() {
+func Recording(rec *Recorder) {
 	e := echo.New()
+
+	logFile, err := os.CreateTemp("./log", time.Now().Format("200601021504_*.log"))
+	if err != nil {
+		panic(err)
+	}
+	defer func() {
+		fmt.Println("log file close.")
+		if err := logFile.Close(); err != nil {
+			panic(err)
+		}
+	}()
+	e.Logger.SetOutput(logFile)
+
 	e.HideBanner = true
 	e.Use(middleware.CORS())
 	e.Use(middleware.Logger())
 
-	rec := NewRecorder()
 	e.GET("/", rec.indexHandler)
 	e.POST("/rec", rec.recHandler)
-
-	defer func() {
-		echoLog := e.Logger.Output()
-
-		f, e := os.Create(time.Now().Format("server_20060102150405.log"))
-	}
 
 	if err := e.Start(":1323"); err != nil {
 		panic(err)

@@ -13,7 +13,6 @@ import (
 
 func main() {
 	go record.Run()
-	go record.Recording()
 
 	d := agouti.ChromeDriver(agouti.ChromeOptions("args", []string{
 		//browser.IsHeadless(),
