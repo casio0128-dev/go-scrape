@@ -50,7 +50,7 @@ func Run() {
 
 		url, err := page.URL()
 		if err != nil {
-			panic(err)
+			recorder.Finish()
 		}
 
 		if !strings.EqualFold(url, beforeURL) {
@@ -82,13 +82,60 @@ type operationRequest struct {
 type Recorder struct {
 	Requests *[]operationRequest
 
-	requestCh chan<- operationRequest
+	requestCh chan *operationRequest
 	finCh     chan interface{}
 }
 
 func (r *Recorder) PushRequest(or *operationRequest) {
 	or.createdAt = time.Now()
 	*r.Requests = append(*r.Requests, *or)
+}
+
+func (r *Recorder) Receive(or *operationRequest) {
+	r.requestCh <- or
+}
+
+func (r *Recorder) Finish() {
+	r.finCh <- struct{}{}
+}
+
+func (r *Recorder) WriteProfile() error {
+	const profileCommonPartFirst = `[
+  	{
+		"name": "",
+		"targetIs": "XPath",
+		"var": {
+		  "": ""
+		},
+		"operation": {
+		  "wakeUp": {
+			"date": "",
+			"time": ""
+		  },
+		  "url": "",
+		  "control": [`
+	const profileCommonPartSecond = `]
+		}
+	}]`
+
+	profFile, err := os.CreateTemp("./", "profile_*.json")
+	if err != nil {
+		return err
+	}
+	if _, err := profFile.WriteString(profileCommonPartFirst); err != nil {
+		return err
+	}
+
+	for {
+		select {
+		case req, ok := <-r.requestCh:
+			if !ok {
+				continue
+			}
+		case <-r.finCh:
+			return nil
+		}
+	}
 }
 
 func NewRecorder() *Recorder {
@@ -112,6 +159,7 @@ func (r *Recorder) recHandler(c echo.Context) error {
 	fmt.Println("content", or.Content)
 	fmt.Println("currentHref", or.CurrentHref)
 
+	r.Receive(or)
 	r.PushRequest(or)
 
 	return c.JSON(http.StatusOK, r.Requests)
