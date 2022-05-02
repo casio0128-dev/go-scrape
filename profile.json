@@ -47,6 +47,24 @@
             ]
           }
         },
+        { "each": {
+          "target": "Selector",
+          "indexName": "i",
+          "operation": [
+            { "click": "{i}"},
+            { "click": ""}
+          ]
+        }},
+        { "for": {
+          "indexName": "i",
+          "start": 5,
+          "end": 5,
+          "target": "Selector",
+          "operation": [
+            { "click": "{i}"},
+            { "click": ""}
+          ]
+        }},
         { "wait": "5s"},
         { "to": "https://google.com"},
         { "click": "body > div.L3eUgb > div.o3j99.ikrT4e.om7nvf > form > div:nth-child(1) > div.A8SBwf > div.RNNXgb > div > div.a4bIc > input" },
