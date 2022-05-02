@@ -6,3 +6,4 @@ drivers/*
 *.png
 *.jpg
 *.jpeg
+log/*
