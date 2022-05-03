@@ -49,22 +49,21 @@
             ]
           }
         },
-        { "each": {
-          "target": "Selector",
-          "indexName": "i",
+        { "for": {
+          "indexVar": "i",
+          "start": 0,
+          "end": 5,
           "operation": [
-            { "click": "{i}"},
-            { "click": ""}
+            { "screenShot": "{i}.png"},
+            { "wait": "1s"}
           ]
         }},
-        { "for": {
-          "indexName": "i",
-          "start": 5,
-          "end": 5,
-          "target": "Selector",
+        { "exit": ""},
+        { "while": {
+          "limitLoopCount": 10,
+          "indexVar": "i",
           "operation": [
-            { "click": "{i}"},
-            { "click": ""}
+            { "click":  "{i}"}
           ]
         }},
         { "wait": "5s"},
