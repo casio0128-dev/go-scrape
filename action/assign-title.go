@@ -9,11 +9,11 @@ import (
 type AssignTitleAction struct {
 	name string
 	key  string
-	vars *profile.Variable
+	prof *profile.Profile
 }
 
-func NewAssignTitleAction(name string, key string, vars *profile.Variable) *AssignTitleAction {
-	return &AssignTitleAction{name: name, key: key, vars: vars}
+func NewAssignTitleAction(name string, key string, prof *profile.Profile) *AssignTitleAction {
+	return &AssignTitleAction{name: name, key: key, prof: prof}
 }
 
 func (aa *AssignTitleAction) Name() string {
@@ -26,7 +26,8 @@ func (aa *AssignTitleAction) Do(page *agouti.Page) error {
 		if err != nil {
 			return err
 		}
-		aa.vars.Set(aa.key, t)
+		vars := &(aa.prof.Variable)
+		vars.Set(aa.key, t)
 	}
 	return nil
 }

@@ -1,7 +1,6 @@
 package action
 
 import (
-	"fmt"
 	"github.com/sclevine/agouti"
 	"go-scrape/profile"
 	"strings"
@@ -12,11 +11,11 @@ type AssignTextAction struct {
 	selector string
 
 	key  string
-	vars *profile.Variable
+	prof *profile.Profile
 }
 
-func NewAssignTextAction(name string, selector string, key string, vars *profile.Variable) *AssignTextAction {
-	return &AssignTextAction{name: name, selector: selector, key: key, vars: vars}
+func NewAssignTextAction(name string, selector string, key string, prof *profile.Profile) *AssignTextAction {
+	return &AssignTextAction{name: name, selector: selector, key: key, prof: prof}
 }
 
 func (aa *AssignTextAction) Name() string {
@@ -25,20 +24,21 @@ func (aa *AssignTextAction) Name() string {
 
 func (aa *AssignTextAction) Do(page *agouti.Page) error {
 	if aa.IsActual() {
-		if selector := page.Find(aa.selector); selector != nil {
+		vars := &(aa.prof.Variable)
+		find := aa.prof.TargetType.FindFunc(page)
+
+		if selector := find(aa.selector); selector != nil {
 			t, err := selector.Text()
 			if err != nil {
 				return err
 			}
-			fmt.Println("aa.vars.Set(aa.key, t)", aa.vars)
-			aa.vars.Set(aa.key, t)
+			vars.Set(aa.key, t)
 		}
 	}
 	return nil
 }
 
 func (aa *AssignTextAction) IsActual() bool {
-	fmt.Println(aa.name, aa.key, aa.selector, *aa.vars)
 	if !strings.EqualFold(aa.name, "assign-text") {
 		return false
 	}

@@ -2,16 +2,19 @@ package action
 
 import (
 	"github.com/sclevine/agouti"
+	"go-scrape/profile"
 	"strings"
 )
 
 type SendKeyAction struct {
 	name          string
 	selector, key string
+
+	prof *profile.Profile
 }
 
-func NewSendKeyAction(name string, selector string, key string) *SendKeyAction {
-	return &SendKeyAction{name: name, selector: selector, key: key}
+func NewSendKeyAction(name string, selector string, key string, prof *profile.Profile) *SendKeyAction {
+	return &SendKeyAction{name: name, selector: selector, key: key, prof: prof}
 }
 
 func (ska *SendKeyAction) Name() string {
@@ -19,7 +22,8 @@ func (ska *SendKeyAction) Name() string {
 }
 
 func (ska *SendKeyAction) Do(page *agouti.Page) error {
-	if selection := page.Find(ska.selector); selection != nil {
+	find := ska.prof.TargetType.FindFunc(page)
+	if selection := find(ska.selector); selection != nil {
 		return selection.SendKeys(ska.key)
 	}
 	return NotExistsElement(ska.selector)

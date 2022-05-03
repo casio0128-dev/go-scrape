@@ -59,14 +59,14 @@ func ParseAction(name string, prof *profile.Profile, args interface{}) Action {
 				return nil
 			} else {
 				beforeSelector = arg
-				return NewClickAction(name, arg)
+				return NewClickAction(name, arg, prof)
 			}
 		case DoubleClick:
 			if arg, err := parseVariables(arg, prof); err != nil {
 				return nil
 			} else {
 				beforeSelector = arg
-				return NewDoubleClickAction(name, arg)
+				return NewDoubleClickAction(name, arg, prof)
 			}
 		case Wait:
 			return NewWaitAction(name, arg)
@@ -95,7 +95,7 @@ func ParseAction(name string, prof *profile.Profile, args interface{}) Action {
 		case Clear:
 			return NewClearAction(name)
 		case AssignTitle:
-			return NewAssignTitleAction(name, arg, &prof.Variable)
+			return NewAssignTitleAction(name, arg, prof)
 		}
 	case map[string]interface{}:
 		var selector string
@@ -117,33 +117,33 @@ func ParseAction(name string, prof *profile.Profile, args interface{}) Action {
 				if text, err := parseVariables(text, prof); err != nil {
 					return nil
 				} else {
-					return NewInputAction(name, selector, text)
+					return NewInputAction(name, selector, text, prof)
 				}
 			}
 		case SendKey:
 			if keys, ok := arg[TypKey].(string); ok {
-				return NewSendKeyAction(name, selector, keys)
+				return NewSendKeyAction(name, selector, keys, prof)
 			}
 		case Select:
 			if text, ok := arg[Text].(string); ok {
-				return NewSelectAction(name, selector, text)
+				return NewSelectAction(name, selector, text, prof)
 			}
 		case Upload:
 			if fileName, ok := arg[FileName].(string); ok {
 				if fileName, err := parseVariables(fileName, prof); err != nil {
 					return nil
 				} else {
-					return NewSelectAction(name, selector, fileName)
+					return NewSelectAction(name, selector, fileName, prof)
 				}
 			}
 		case AssignText:
 			if varName, ok := arg[VarName].(string); ok {
-				return NewAssignTextAction(name, selector, varName, &prof.Variable)
+				return NewAssignTextAction(name, selector, varName, prof)
 			}
 		case AssignAttr:
 			if varName, ok := arg[VarName].(string); ok {
 				if attrName, ok := arg[AttrName].(string); ok {
-					return NewAssignAttrAction(name, selector, attrName, varName, &prof.Variable)
+					return NewAssignAttrAction(name, selector, attrName, varName, prof)
 				}
 			}
 		case If:
