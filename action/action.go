@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/sclevine/agouti"
 	"go-scrape/profile"
+	"strconv"
 	"strings"
 )
 
@@ -89,11 +90,23 @@ func ParseAction(name string, prof *profile.Profile, args interface{}) Action {
 				return NewCmdAction(name, arg)
 			}
 		case Reload:
-			return NewReloadAction(name)
+			if ok, err := strconv.ParseBool(arg); err != nil {
+				return nil
+			} else {
+				return NewReloadAction(name, ok)
+			}
 		case Exit:
-			return NewExitAction(name)
+			if ok, err := strconv.ParseBool(arg); err != nil {
+				return nil
+			} else {
+				return NewExitAction(name, ok)
+			}
 		case Clear:
-			return NewClearAction(name)
+			if ok, err := strconv.ParseBool(arg); err != nil {
+				return nil
+			} else {
+				return NewClearAction(name, ok)
+			}
 		case AssignTitle:
 			return NewAssignTitleAction(name, arg, prof)
 		}

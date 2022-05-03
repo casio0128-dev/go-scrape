@@ -7,10 +7,11 @@ import (
 
 type ClearAction struct {
 	name string
+	ok   bool
 }
 
-func NewClearAction(name string) *ClearAction {
-	return &ClearAction{name: name}
+func NewClearAction(name string, ok bool) *ClearAction {
+	return &ClearAction{name: name, ok: ok}
 }
 
 func (ca *ClearAction) Name() string {
@@ -19,7 +20,11 @@ func (ca *ClearAction) Name() string {
 
 func (ca *ClearAction) Do(page *agouti.Page) error {
 	if ca.IsActual() {
-		return page.ClearCookies()
+		if ca.ok {
+			return page.ClearCookies()
+		} else {
+			return nil
+		}
 	}
 	return NotActualFormat(ca.name)
 }
