@@ -2,16 +2,18 @@ package action
 
 import (
 	"github.com/sclevine/agouti"
+	"go-scrape/profile"
 	"strings"
 )
 
 type DoubleClickAction struct {
 	name     string
 	selector string
+	prof     *profile.Profile
 }
 
-func NewDoubleClickAction(name string, selector string) *DoubleClickAction {
-	return &DoubleClickAction{name: name, selector: selector}
+func NewDoubleClickAction(name string, selector string, prof *profile.Profile) *DoubleClickAction {
+	return &DoubleClickAction{name: name, selector: selector, prof: prof}
 }
 
 func (dca *DoubleClickAction) Name() string {

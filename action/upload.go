@@ -2,6 +2,7 @@ package action
 
 import (
 	"github.com/sclevine/agouti"
+	"go-scrape/profile"
 	"strings"
 )
 
@@ -9,10 +10,12 @@ type UploadAction struct {
 	name     string
 	selector string
 	fileName string
+
+	prof *profile.Profile
 }
 
-func NewUploadAction(name string, selector string, fileName string) *UploadAction {
-	return &UploadAction{name: name, selector: selector, fileName: fileName}
+func NewUploadAction(name string, selector string, fileName string, prof *profile.Profile) *UploadAction {
+	return &UploadAction{name: name, selector: selector, fileName: fileName, prof: prof}
 }
 
 func (ua *UploadAction) Name() string {
@@ -20,8 +23,9 @@ func (ua *UploadAction) Name() string {
 }
 
 func (ua *UploadAction) Do(page *agouti.Page) error {
+	find := ua.prof.TargetType.FindFunc(page)
 	if ua.IsActual() {
-		if selection := page.Find(ua.selector); selection != nil {
+		if selection := find(ua.selector); selection != nil {
 			return selection.UploadFile(ua.fileName)
 		} else {
 			return NotExistsElement(ua.selector)
