@@ -28,6 +28,9 @@ const (
 	AssignTitle = "assign-title"
 	AssignAttr  = "assign-attr"
 	If          = "if"
+	Each        = "each"
+	For         = "for"
+	While       = "while"
 )
 
 const (
@@ -182,6 +185,10 @@ func ParseAction(name string, prof *profile.Profile, args interface{}) Action {
 				}
 			}
 			return NewIfAction(name, condMap)
+		case Each:
+			fmt.Println(name, arg)
+		case For:
+			fmt.Println(name, arg)
 		}
 	}
 	fmt.Println("DEBUG: Not find action name.")
