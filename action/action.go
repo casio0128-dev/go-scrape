@@ -185,9 +185,45 @@ func ParseAction(name string, prof *profile.Profile, args interface{}) Action {
 				}
 			}
 			return NewIfAction(name, condMap)
-		case Each:
-			fmt.Println(name, arg)
-		case For:
+		case Each, For:
+			var acts []Action
+			if ops, ok := arg["operation"]; ok {
+				if op, ok := ops.(map[string]interface{}); ok {
+					for key, val := range op {
+						acts = append(acts, ParseAction(key, prof, val))
+					}
+				}
+			} else {
+				return nil
+			}
+
+			if iv, ok := arg["indexVar"]; ok {
+				switch indexVar := iv.(type) {
+				case string:
+					switch name {
+					case Each:
+						return NewEachAction(name, selector, acts, indexVar, prof)
+					case For:
+						var start, end int
+
+						if si, ok := arg["start"]; ok {
+							if start, ok = si.(int); !ok {
+								return nil
+							}
+						}
+
+						if ei, ok := arg["start"]; ok {
+							if end, ok = ei.(int); !ok {
+								return nil
+							}
+						}
+
+						return NewForAction(name, start, end, acts, indexVar, prof)
+					}
+				default:
+					return nil
+				}
+			}
 			fmt.Println(name, arg)
 		}
 	}
@@ -195,18 +231,21 @@ func ParseAction(name string, prof *profile.Profile, args interface{}) Action {
 	return nil
 }
 
-func parseVariables(str string, prof *profile.Profile) (string, error) {
-	if parsed, err := profile.Parse(str, prof.Variable); err != nil {
-		return "", err
-	} else {
-		return parsed, nil
-	}
+func parseVariables(str
+string, prof * profile.Profile) (string, error) {
+if parsed, err := profile.Parse(str, prof.Variable); err != nil {
+return "", err
+} else {
+return parsed, nil
+}
 }
 
-func NotExistsElement(selector string) error {
-	return fmt.Errorf("%s is not find element.\n", selector)
+func NotExistsElement(selector
+string) error{
+return fmt.Errorf("%s is not find element.\n", selector)
 }
 
-func NotActualFormat(name string) error {
-	return fmt.Errorf("%s is invalid format\n", name)
+func NotActualFormat(name
+string) error{
+return fmt.Errorf("%s is invalid format\n", name)
 }

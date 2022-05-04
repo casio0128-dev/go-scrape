@@ -16,8 +16,8 @@ type EachAction struct {
 	prof     *profile.Profile
 }
 
-func NewEachAction(name string, target string, indexVar string, prof *profile.Profile) *EachAction {
-	return &EachAction{name: name, target: target, indexVar: indexVar, prof: prof}
+func NewEachAction(name string, target string, operations []Action, indexVar string, prof *profile.Profile) *EachAction {
+	return &EachAction{name: name, target: target, operations: operations, indexVar: indexVar, prof: prof}
 }
 
 func (ea *EachAction) Name() string {

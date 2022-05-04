@@ -17,6 +17,10 @@ type ForAction struct {
 	prof     *profile.Profile
 }
 
+func NewForAction(name string, start int, end int, operations []Action, indexVar string, prof *profile.Profile) *ForAction {
+	return &ForAction{name: name, start: start, end: end, operations: operations, indexVar: indexVar, prof: prof}
+}
+
 func (fa *ForAction) Name() string {
 	return fa.name
 }
