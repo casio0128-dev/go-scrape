@@ -27,10 +27,10 @@ func (fa *ForAction) Name() string {
 
 func (fa *ForAction) Do(page *agouti.Page) error {
 	if fa.IsActual() {
-		prof := fa.prof
+		prof := &(fa.prof.Variable)
 
 		for i := fa.start; i < fa.end; fa.next(&i) {
-			prof.Variable.Set(fa.indexVar, strconv.Itoa(i))
+			prof.Set(fa.indexVar, strconv.Itoa(i))
 			for _, operation := range fa.operations {
 				if err := operation.Do(page); err != nil {
 					return err

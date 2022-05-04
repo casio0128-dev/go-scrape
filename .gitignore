@@ -7,3 +7,4 @@ drivers/*
 *.jpg
 *.jpeg
 log/*
+*.json

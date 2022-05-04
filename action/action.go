@@ -78,6 +78,7 @@ func ParseAction(name string, prof *profile.Profile, args interface{}) Action {
 			if arg, err := parseVariables(arg, prof); err != nil {
 				return nil
 			} else {
+				fmt.Println(name, arg, prof)
 				return NewScreenShotAction(name, arg)
 			}
 		case To:
@@ -188,47 +189,54 @@ func ParseAction(name string, prof *profile.Profile, args interface{}) Action {
 		case Each, For:
 			var acts []Action
 			if ops, ok := arg["operation"]; ok {
-				if op, ok := ops.(map[string]interface{}); ok {
-					for key, val := range op {
-						acts = append(acts, ParseAction(key, prof, val))
+				if operations, ok := ops.([]interface{}); ok {
+					for _, op := range operations {
+						if operation, ok := op.(map[string]interface{}); ok {
+							for key, val := range operation {
+								acts = append(acts, ParseAction(key, prof, val))
+							}
+						}
 					}
 				}
 			} else {
 				return nil
 			}
 
-			if iv, ok := arg["indexVar"]; ok {
-				switch indexVar := iv.(type) {
-				case string:
+			if iv, ok := arg["var"]; ok {
+				if variable, ok := iv.(string); ok {
 					switch name {
 					case Each:
-						return NewEachAction(name, selector, acts, indexVar, prof)
+						return NewEachAction(name, selector, acts, variable, prof)
 					case For:
+						var start64f, end64f float64
 						var start, end int
 
 						if si, ok := arg["start"]; ok {
-							if start, ok = si.(int); !ok {
+							fmt.Println(si, printType(si))
+							if start64f, ok = si.(float64); !ok {
 								return nil
 							}
+							start = int(start64f)
 						}
 
-						if ei, ok := arg["start"]; ok {
-							if end, ok = ei.(int); !ok {
+						if ei, ok := arg["end"]; ok {
+							if end64f, ok = ei.(float64); !ok {
 								return nil
 							}
+							end = int(end64f)
 						}
-
-						return NewForAction(name, start, end, acts, indexVar, prof)
+						return NewForAction(name, start, end, acts, variable, prof)
 					}
-				default:
-					return nil
 				}
 			}
-			fmt.Println(name, arg)
 		}
 	}
 	fmt.Println("DEBUG: Not find action name.")
 	return nil
+}
+
+func printType(any interface{}) string {
+	return fmt.Sprintf("%T", any)
 }
 
 func parseVariables(str string, prof *profile.Profile) (string, error) {

@@ -14,71 +14,20 @@
       },
       "url": "https://google.com",
       "control": [
-        { "assign-title":  "TITLE"},
-        { "wait": "1s" },
-        { "assign-text": {
-          "target": "#gb > div > div:nth-child(1) > div > div:nth-child(1) > a",
-          "var": "TEST"
-        }},
-        { "click": "body > div.L3eUgb > div.o3j99.ikrT4e.om7nvf > form > div:nth-child(1) > div.A8SBwf > div.RNNXgb > div > div.a4bIc > input" },
-        { "input": {
-          "target": "",
-          "text": "{ss} 祝日"
-        }},
-        { "wait": "5s"},
-        { "click": "body > div.L3eUgb > div.o3j99.ikrT4e.om7nvf > form > div:nth-child(1) > div.A8SBwf > div.FPdoLc.lJ9FBc > center > input.gNO89b"},
-        {
-          "if": {
-            "{TEST}==Gmail": [
-              {
-                "input": {
-                  "target": "",
-                  "text": "{TEST}_PARSED"
-                }
-              },
-              {"screenShot": "if-success-cond1.png"}
-            ],
-            "conditions==condition": [
-              {
-                "input": {
-                  "target": "",
-                  "text": "Condition2"
-                }
-              },
-              {"screenShot": "if-success-cond2-SASA.png"}
-            ]
-          }
-        },
+        { "screenShot": "{args2}.png"},
         { "for": {
-          "indexVar": "i",
+          "var": "VA",
           "start": 0,
           "end": 5,
           "operation": [
-            { "screenShot": "{i}.png"},
+            { "input": {
+              "target":"html body div.L3eUgb div.o3j99.ikrT4e.om7nvf form div div.A8SBwf div.RNNXgb div.SDkEP div.a4bIc input.gLFyf.gsfi",
+              "text": "{i}"
+            }},
+            { "screenShot": "{args2}.png"},
             { "wait": "1s"}
           ]
-        }},
-        { "exit": ""},
-        { "while": {
-          "limitLoopCount": 10,
-          "indexVar": "i",
-          "operation": [
-            { "click":  "{i}"}
-          ]
-        }},
-        { "wait": "5s"},
-        { "to": "https://google.com"},
-        { "click": "body > div.L3eUgb > div.o3j99.ikrT4e.om7nvf > form > div:nth-child(1) > div.A8SBwf > div.RNNXgb > div > div.a4bIc > input" },
-        { "input": {
-          "target":"",
-          "text": "Golang Packages"
-        }},
-        { "screenShot": "sample.png" },
-        { "wait": "1s"},
-        { "to": "https://yahoo.co.jp" },
-        { "wait": "1s"},
-        { "click": "#ContentWrapper > header > section._1o9PYyvuVafb5hd9eJ9rYX > div > form > fieldset > span > input"},
-        { "screenShot": "sample2.png" }
+        }}
       ]
     }
   }
