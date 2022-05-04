@@ -231,21 +231,18 @@ func ParseAction(name string, prof *profile.Profile, args interface{}) Action {
 	return nil
 }
 
-func parseVariables(str
-string, prof * profile.Profile) (string, error) {
-if parsed, err := profile.Parse(str, prof.Variable); err != nil {
-return "", err
-} else {
-return parsed, nil
-}
-}
-
-func NotExistsElement(selector
-string) error{
-return fmt.Errorf("%s is not find element.\n", selector)
+func parseVariables(str string, prof *profile.Profile) (string, error) {
+	if parsed, err := profile.Parse(str, prof.Variable); err != nil {
+		return "", err
+	} else {
+		return parsed, nil
+	}
 }
 
-func NotActualFormat(name
-string) error{
-return fmt.Errorf("%s is invalid format\n", name)
+func NotExistsElement(selector string) error {
+	return fmt.Errorf("%s is not find element.\n", selector)
+}
+
+func NotActualFormat(name string) error {
+	return fmt.Errorf("%s is invalid format\n", name)
 }
