@@ -21,11 +21,18 @@ func (ia *InputAction) Name() string {
 }
 
 func (ia *InputAction) Do(page *agouti.Page) error {
-	find := ia.prof.TargetType.FindFunc(page)
-	if selection := find(ia.selector); selection != nil {
-		return selection.Fill(ia.text)
+	if ia.IsActual() {
+		if selector, err := parseVariables(ia.selector, ia.prof); err != nil {
+			return err
+		} else {
+			find := ia.prof.TargetType.FindFunc(page)
+			if selection := find(selector); selection != nil {
+				return selection.Fill(ia.text)
+			}
+			return NotExistsElement(selector)
+		}
 	}
-	return NotExistsElement(ia.selector)
+	return NotActualFormat(ia.Name())
 }
 
 func (ia *InputAction) IsActual() bool {

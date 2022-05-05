@@ -26,13 +26,18 @@ func (aa *AssignTextAction) Do(page *agouti.Page) error {
 	if aa.IsActual() {
 		vars := &(aa.prof.Variable)
 		find := aa.prof.TargetType.FindFunc(page)
-
-		if selector := find(aa.selector); selector != nil {
-			t, err := selector.Text()
-			if err != nil {
-				return err
+		if selector, err := parseVariables(aa.selector, aa.prof); err != nil {
+			return err
+		} else {
+			if selection := find(selector); selection != nil {
+				t, err := selection.Text()
+				if err != nil {
+					return err
+				}
+				vars.Set(aa.key, t)
+				return nil
 			}
-			vars.Set(aa.key, t)
+			return NotExistsElement(selector)
 		}
 	}
 	return nil

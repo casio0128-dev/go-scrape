@@ -28,15 +28,23 @@ func (aa *AssignAttrAction) Do(page *agouti.Page) error {
 		vars := &(aa.prof.Variable)
 		find := aa.prof.TargetType.FindFunc(page)
 
-		if selector := find(aa.selector); selector != nil {
-			a, err := selector.Attribute(aa.attrName)
-			if err != nil {
-				return err
+		if selector, err := parseVariables(aa.selector, aa.prof); err != nil {
+			return err
+		} else {
+			if selection := find(selector); selection != nil {
+				if attr, err := parseVariables(aa.attrName, aa.prof); err == nil {
+					a, err := selection.Attribute(attr)
+					if err != nil {
+						return err
+					}
+					vars.Set(aa.key, a)
+					return nil
+				}
 			}
-			vars.Set(aa.key, a)
+			return NotExistsElement(selector)
 		}
 	}
-	return nil
+	return NotActualFormat(aa.Name())
 }
 
 func (aa *AssignAttrAction) IsActual() bool {
