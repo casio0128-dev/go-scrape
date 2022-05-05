@@ -1,6 +1,7 @@
 package action
 
 import (
+	"fmt"
 	"github.com/sclevine/agouti"
 	"go-scrape/profile"
 	"strings"
@@ -27,7 +28,12 @@ func (ia *InputAction) Do(page *agouti.Page) error {
 		} else {
 			find := ia.prof.TargetType.FindFunc(page)
 			if selection := find(selector); selection != nil {
-				return selection.Fill(ia.text)
+				if text, err := parseVariables(ia.text, ia.prof); err != nil {
+					return err
+				} else {
+					fmt.Println(text, ia.prof)
+					return selection.Fill(text)
+				}
 			}
 			return NotExistsElement(selector)
 		}
