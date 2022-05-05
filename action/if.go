@@ -1,7 +1,6 @@
 package action
 
 import (
-	"fmt"
 	"github.com/sclevine/agouti"
 	"go-scrape/common"
 	"go-scrape/profile"
@@ -114,7 +113,7 @@ func (ia *IfAction) Do(page *agouti.Page) error {
 			} else {
 				condition = Condition(parsedCond)
 			}
-			fmt.Println(condition)
+
 			if condition.Expr() {
 				for _, act := range (*ia.proc)[condition] {
 					if err := act.Do(page); err != nil {
