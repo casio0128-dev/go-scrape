@@ -23,7 +23,7 @@ func Parse(str string, vars Variable) (string, error) {
 		return "", err
 	}
 
-	reg, err := regexp.Compile(`{([a-z|A-Z|_]+)}`)
+	reg, err := regexp.Compile(`{\D([a-z|A-Z|\d]*)}`)
 	if err != nil {
 		return "", err
 	}
