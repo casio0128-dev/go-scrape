@@ -170,7 +170,7 @@ func ParseAction(name string, prof *profile.Profile, args interface{}) Action {
 					continue
 				}
 			}
-			return NewIfAction(name, condMap)
+			return NewIfAction(name, condMap, prof)
 		}
 	}
 	fmt.Println("DEBUG: Not find action name.")
