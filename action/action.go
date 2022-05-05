@@ -40,8 +40,6 @@ const (
 
 type Action interface {
 	Name() string
-	// TODO: 変数機能を利用するアクションは、Do()の処理内で変数を解釈するよう修正する
-	// TODO: profを持っていないアクションについては実装を見直し必要なら追加、cmd,exit,if,reload,to,waitはあったほうがよいかも。
 	Do(*agouti.Page) error
 	IsActual() bool
 }
