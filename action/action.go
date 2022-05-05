@@ -73,25 +73,24 @@ func ParseAction(name string, prof *profile.Profile, args interface{}) Action {
 				return NewDoubleClickAction(name, arg, prof)
 			}
 		case Wait:
-			return NewWaitAction(name, arg)
+			return NewWaitAction(name, arg, prof)
 		case ScreenShot:
 			if arg, err := parseVariables(arg, prof); err != nil {
 				return nil
 			} else {
-				fmt.Println(name, arg, prof)
-				return NewScreenShotAction(name, arg)
+				return NewScreenShotAction(name, arg, prof)
 			}
 		case To:
 			if arg, err := parseVariables(arg, prof); err != nil {
 				return nil
 			} else {
-				return NewToAction(name, arg)
+				return NewToAction(name, arg, prof)
 			}
 		case Cmd:
 			if arg, err := parseVariables(arg, prof); err != nil {
 				return nil
 			} else {
-				return NewCmdAction(name, arg)
+				return NewCmdAction(name, arg, prof)
 			}
 		case Reload:
 			if ok, err := strconv.ParseBool(arg); err != nil {
@@ -185,7 +184,7 @@ func ParseAction(name string, prof *profile.Profile, args interface{}) Action {
 					continue
 				}
 			}
-			return NewIfAction(name, condMap)
+			return NewIfAction(name, condMap, prof)
 		case Each, For:
 			var acts []Action
 			if ops, ok := arg["operation"]; ok {

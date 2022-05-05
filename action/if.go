@@ -3,6 +3,7 @@ package action
 import (
 	"github.com/sclevine/agouti"
 	"go-scrape/common"
+	"go-scrape/profile"
 	"regexp"
 	"strconv"
 	"strings"
@@ -93,10 +94,11 @@ func (c Condition) lessThan(left, right string) bool {
 type IfAction struct {
 	name string
 	proc *ConditionMap
+	prof *profile.Profile
 }
 
-func NewIfAction(name string, proc *ConditionMap) *IfAction {
-	return &IfAction{name: name, proc: proc}
+func NewIfAction(name string, proc *ConditionMap, prof *profile.Profile) *IfAction {
+	return &IfAction{name: name, proc: proc, prof: prof}
 }
 
 func (ia *IfAction) Name() string {
@@ -106,6 +108,12 @@ func (ia *IfAction) Name() string {
 func (ia *IfAction) Do(page *agouti.Page) error {
 	if ia.IsActual() {
 		for _, condition := range ia.proc.GetConditions() {
+			if parsedCond, err := parseVariables(string(condition), ia.prof); err != nil {
+				return err
+			} else {
+				condition = Condition(parsedCond)
+			}
+
 			if condition.Expr() {
 				for _, act := range (*ia.proc)[condition] {
 					if err := act.Do(page); err != nil {

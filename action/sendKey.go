@@ -22,11 +22,22 @@ func (ska *SendKeyAction) Name() string {
 }
 
 func (ska *SendKeyAction) Do(page *agouti.Page) error {
-	find := ska.prof.TargetType.FindFunc(page)
-	if selection := find(ska.selector); selection != nil {
-		return selection.SendKeys(ska.key)
+	if ska.IsActual() {
+		if selector, err := parseVariables(ska.selector, ska.prof); err != nil {
+			return err
+		} else {
+			find := ska.prof.TargetType.FindFunc(page)
+			if selection := find(selector); selection != nil {
+				if pressKey, err := parseVariables(ska.key, ska.prof); err != nil {
+					return err
+				} else {
+					return selection.SendKeys(pressKey)
+				}
+			}
+		}
+		return NotExistsElement(ska.selector)
 	}
-	return NotExistsElement(ska.selector)
+	return NotActualFormat(ska.Name())
 }
 
 func (ska *SendKeyAction) IsActual() bool {

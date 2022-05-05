@@ -22,11 +22,22 @@ func (sa *SelectAction) Name() string {
 }
 
 func (sa *SelectAction) Do(page *agouti.Page) error {
-	find := sa.prof.TargetType.FindFunc(page)
-	if selection := find(sa.selector); selection != nil {
-		return selection.Select(sa.text)
+	if sa.IsActual() {
+		if selector, err := parseVariables(sa.selector, sa.prof); err != nil {
+			return err
+		} else {
+			find := sa.prof.TargetType.FindFunc(page)
+			if selection := find(selector); selection != nil {
+				if text, err := parseVariables(sa.text, sa.prof); err != nil {
+					return err
+				} else {
+					return selection.Select(text)
+				}
+			}
+			return NotExistsElement(selector)
+		}
 	}
-	return NotExistsElement(sa.selector)
+	return NotActualFormat(sa.Name())
 }
 
 func (sa *SelectAction) IsActual() bool {
