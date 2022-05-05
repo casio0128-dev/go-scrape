@@ -21,10 +21,17 @@ func (dca *DoubleClickAction) Name() string {
 }
 
 func (dca *DoubleClickAction) Do(page *agouti.Page) error {
-	if selection := page.Find(dca.selector); selection != nil {
-		return selection.Click()
+	if dca.IsActual() {
+		if selector, err := parseVariables(dca.selector, dca.prof); err != nil {
+			return err
+		} else {
+			if selection := page.Find(selector); selection != nil {
+				return selection.Click()
+			}
+			return NotExistsElement(selector)
+		}
 	}
-	return NotExistsElement(dca.selector)
+	return NotActualFormat(dca.Name())
 }
 
 func (dca *DoubleClickAction) IsActual() bool {

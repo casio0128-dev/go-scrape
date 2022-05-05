@@ -2,6 +2,7 @@ package action
 
 import (
 	"github.com/sclevine/agouti"
+	"go-scrape/profile"
 	"strings"
 	"time"
 )
@@ -9,10 +10,11 @@ import (
 type WaitAction struct {
 	name     string
 	waitTime string
+	prof     *profile.Profile
 }
 
-func NewWaitAction(name string, waitTime string) *WaitAction {
-	return &WaitAction{name: name, waitTime: waitTime}
+func NewWaitAction(name string, waitTime string, prof *profile.Profile) *WaitAction {
+	return &WaitAction{name: name, waitTime: waitTime, prof: prof}
 }
 
 func (wa *WaitAction) Name() string {
@@ -20,12 +22,19 @@ func (wa *WaitAction) Name() string {
 }
 
 func (wa *WaitAction) Do(_ *agouti.Page) error {
-	if d, err := time.ParseDuration(wa.waitTime); err != nil {
-		return err
-	} else {
-		<-time.After(d)
+	if wa.IsActual() {
+		if waitTime, err := parseVariables(wa.waitTime, wa.prof); err != nil {
+			return err
+		} else {
+			if d, err := time.ParseDuration(waitTime); err != nil {
+				return err
+			} else {
+				<-time.After(d)
+				return nil
+			}
+		}
 	}
-	return nil
+	return NotActualFormat(wa.Name())
 }
 
 func (wa *WaitAction) IsActual() bool {

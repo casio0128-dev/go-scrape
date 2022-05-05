@@ -22,9 +22,16 @@ func (ca *ClickAction) Name() string {
 }
 
 func (ca *ClickAction) Do(page *agouti.Page) error {
-	find := ca.prof.TargetType.FindFunc(page)
-	if selection := find(ca.selector); selection != nil {
-		return selection.Click()
+	if ca.IsActual() {
+		find := ca.prof.TargetType.FindFunc(page)
+		if selector, err := parseVariables(ca.selector, ca.prof); err != nil {
+			return err
+		} else {
+			if selection := find(selector); selection != nil {
+				return selection.Click()
+			}
+			return NotExistsElement(selector)
+		}
 	}
 	return NotExistsElement(ca.selector)
 }

@@ -2,16 +2,19 @@ package action
 
 import (
 	"github.com/sclevine/agouti"
+	"go-scrape/profile"
 	"strings"
 )
 
 type ToAction struct {
 	name string
 	url  string
+
+	prof *profile.Profile
 }
 
-func NewToAction(name string, url string) *ToAction {
-	return &ToAction{name: name, url: url}
+func NewToAction(name string, url string, prof *profile.Profile) *ToAction {
+	return &ToAction{name: name, url: url, prof: prof}
 }
 
 func (ta *ToAction) Name() string {
@@ -20,7 +23,11 @@ func (ta *ToAction) Name() string {
 
 func (ta *ToAction) Do(page *agouti.Page) error {
 	if ta.IsActual() {
-		return page.Navigate(ta.url)
+		if url, err := parseVariables(ta.url, ta.prof); err != nil {
+			return err
+		} else {
+			return page.Navigate(url)
+		}
 	}
 	return NotActualFormat(ta.name)
 }

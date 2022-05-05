@@ -23,12 +23,19 @@ func (ua *UploadAction) Name() string {
 }
 
 func (ua *UploadAction) Do(page *agouti.Page) error {
-	find := ua.prof.TargetType.FindFunc(page)
 	if ua.IsActual() {
-		if selection := find(ua.selector); selection != nil {
-			return selection.UploadFile(ua.fileName)
+		if selector, err := parseVariables(ua.selector, ua.prof); err != nil {
+			return err
 		} else {
-			return NotExistsElement(ua.selector)
+			find := ua.prof.TargetType.FindFunc(page)
+			if selection := find(selector); selection != nil {
+				if fileName, err := parseVariables(ua.fileName, ua.prof); err != nil {
+					return err
+				} else {
+					return selection.UploadFile(fileName)
+				}
+			}
+			return NotExistsElement(selector)
 		}
 	}
 	return NotActualFormat(ua.name)

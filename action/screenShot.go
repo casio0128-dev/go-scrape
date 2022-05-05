@@ -2,16 +2,19 @@ package action
 
 import (
 	"github.com/sclevine/agouti"
+	"go-scrape/profile"
 	"strings"
 )
 
 type ScreenShotAction struct {
 	name     string
 	fileName string
+
+	prof *profile.Profile
 }
 
-func NewScreenShotAction(name string, fileName string) *ScreenShotAction {
-	return &ScreenShotAction{name: name, fileName: fileName}
+func NewScreenShotAction(name string, fileName string, prof *profile.Profile) *ScreenShotAction {
+	return &ScreenShotAction{name: name, fileName: fileName, prof: prof}
 }
 
 func (ssa *ScreenShotAction) Name() string {
@@ -20,7 +23,11 @@ func (ssa *ScreenShotAction) Name() string {
 
 func (ssa *ScreenShotAction) Do(page *agouti.Page) error {
 	if ssa.IsActual() {
-		return page.Screenshot(ssa.fileName)
+		if name, err := parseVariables(ssa.fileName, ssa.prof); err != nil {
+			return err
+		} else {
+			return page.Screenshot(name)
+		}
 	}
 	return NotActualFormat(ssa.name)
 }

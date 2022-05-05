@@ -2,6 +2,7 @@ package action
 
 import (
 	"github.com/sclevine/agouti"
+	"go-scrape/profile"
 	"os/exec"
 	"strings"
 )
@@ -9,10 +10,12 @@ import (
 type CmdAction struct {
 	name    string
 	command string
+
+	prof *profile.Profile
 }
 
-func NewCmdAction(name string, command string) *CmdAction {
-	return &CmdAction{name: name, command: command}
+func NewCmdAction(name string, command string, prof *profile.Profile) *CmdAction {
+	return &CmdAction{name: name, command: command, prof: prof}
 }
 
 func (ca *CmdAction) Name() string {
@@ -21,7 +24,11 @@ func (ca *CmdAction) Name() string {
 
 func (ca *CmdAction) Do(_ *agouti.Page) error {
 	if ca.IsActual() {
-		return exec.Command(ca.command).Run()
+		if cmd, err := parseVariables(ca.command, ca.prof); err != nil {
+			return err
+		} else {
+			return exec.Command(cmd).Run()
+		}
 	}
 	return NotActualFormat(ca.name)
 }
