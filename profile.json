@@ -2,6 +2,13 @@
   {
     "name": "1",
     "targetIs": "Selector",
+    "browserOption": {
+      "isHeadless": false,
+      "size": {
+        "width": 680,
+        "height": 680
+      }
+    },
     "var": {
       "SAMPLE": "condition",
       "args1": "",

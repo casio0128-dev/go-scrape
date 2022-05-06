@@ -10,10 +10,11 @@ import (
 type Profiles []Profile
 
 type Profile struct {
-	Name       string     `json:"name"`
-	TargetType TargetType `json:"targetIs"`
-	Variable   Variable   `json:"var"`
-	Operation  Operation  `json:"operation"`
+	Name          string        `json:"name"`
+	BrowserOption BrowserOption `json:"browserOption"`
+	TargetType    TargetType    `json:"targetIs"`
+	Variable      Variable      `json:"var"`
+	Operation     Operation     `json:"operation"`
 }
 
 func Parse(str string, vars Variable) (string, error) {
