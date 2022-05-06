@@ -11,9 +11,10 @@ import (
 )
 
 func main() {
-	d := agouti.ChromeDriver(agouti.ChromeOptions("args", []string{
-		//browser.IsHeadless(),
-	}))
+	prof := parse("profile.json")
+	targetProfile := &(prof[0])
+
+	d := agouti.ChromeDriver(targetProfile.BrowserOption.ChromeOption())
 
 	if err := d.Start(); err != nil {
 		panic(err)
@@ -29,10 +30,7 @@ func main() {
 		panic(err)
 	}
 
-	prof := parse("profile.json")
-	fmt.Println(prof)
-
-	if err := browser.Do(page, &(prof[0])); err != nil {
+	if err := browser.Do(page, targetProfile); err != nil {
 		panic(err)
 	}
 }
