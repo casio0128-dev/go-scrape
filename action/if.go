@@ -108,13 +108,14 @@ func (ia *IfAction) Name() string {
 func (ia *IfAction) Do(page *agouti.Page) error {
 	if ia.IsActual() {
 		for _, condition := range ia.proc.GetConditions() {
-			if parsedCond, err := parseVariables(string(condition), ia.prof); err != nil {
+			var parsedCond Condition
+			if parsed, err := parseVariables(string(condition), ia.prof); err != nil {
 				return err
 			} else {
-				condition = Condition(parsedCond)
+				parsedCond = Condition(parsed)
 			}
 
-			if condition.Expr() {
+			if parsedCond.Expr() {
 				for _, act := range (*ia.proc)[condition] {
 					if err := act.Do(page); err != nil {
 						return err
