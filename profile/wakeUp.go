@@ -39,7 +39,7 @@ func (w WakeUp) DateTime() (time.Time, error) {
 		}
 	}
 
-	if w.isActualDateFormat() {
+	if w.isActualTimeFormat() {
 		timeSep := strings.Split(w.Time, common.TIME_SEPARATER)
 		if hour, err = strconv.Atoi(timeSep[0]); err != nil {
 			return time.Time{}, err
