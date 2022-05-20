@@ -1,6 +1,7 @@
 package browser
 
 import (
+	"fmt"
 	"github.com/sclevine/agouti"
 	act "go-scrape/action"
 	"go-scrape/profile"
@@ -24,7 +25,9 @@ func Do(page *agouti.Page, prof *profile.Profile) error {
 
 	for _, ctrls := range operation.Control {
 		for actName, content := range ctrls {
+			fmt.Printf("act.ParseAction(%v, %v, %v)\n", actName, prof, content)
 			action := act.ParseAction(actName, prof, content)
+			fmt.Println("action", action)
 			if err := action.Do(page); err != nil {
 				return err
 			}

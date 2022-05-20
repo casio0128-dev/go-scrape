@@ -7,10 +7,11 @@ import (
 
 type ExitAction struct {
 	name string
+	ok   bool
 }
 
-func NewExitAction(name string) *ExitAction {
-	return &ExitAction{name: name}
+func NewExitAction(name string, ok bool) *ExitAction {
+	return &ExitAction{name: name, ok: ok}
 }
 
 func (ea *ExitAction) Name() string {
@@ -19,7 +20,11 @@ func (ea *ExitAction) Name() string {
 
 func (ea *ExitAction) Do(page *agouti.Page) error {
 	if ea.IsActual() {
-		return page.Destroy()
+		if ea.ok {
+			return page.Destroy()
+		} else {
+			return nil
+		}
 	}
 	return NotActualFormat(ea.name)
 }
