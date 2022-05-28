@@ -6,6 +6,8 @@ import (
 	"github.com/sclevine/agouti"
 	"go-scrape/browser"
 	"go-scrape/profile"
+	"go-scrape/web"
+	"net/http"
 	"os"
 	"strings"
 )
@@ -13,6 +15,11 @@ import (
 func main() {
 	prof := parse("profile.json")
 	targetProfile := &(prof[0])
+
+	web.SetRouting(map[string]interface{}{
+		web.Index: nil,
+	})
+	http.ListenAndServe(":8080", nil)
 
 	d := agouti.ChromeDriver(targetProfile.BrowserOption.ChromeOption())
 

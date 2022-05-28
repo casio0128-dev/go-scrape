@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="jp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="./static/css/uikit.min.css">
+    <link rel="stylesheet" href="./static/css/uikit-rtl.min.css">
+    <!-- JavaScript -->
+    <script src="./static/js/jquery-3.6.0.min.js"></script>
+    <script src="./static/js/uikit.min.js"></script>
+    <script src="./static/js/uikit-icons.min.js"></script>
+
+    <title>Document</title>
+</head>
+<body class="uk-container-expand">
+    <nav class="uk-navbar-container uk-margin">
+        <div class="uk-navbar-left">
+            <a class="uk-navbar-item uk-logo">go-scrape</a>
+        </div>
+        <div class="uk-navbar-right uk-flex uk-flex-middle uk-flex-between">
+            <div></div>
+        </div>
+    </nav>
+
+    <div>
+            <div class="uk-card uk-flex uk-flex-column">
+                <!-- Common -->
+                <div class="uk-flex uk-flex-column uk-card-body">
+                    <div class="uk-card-title">Base</div>
+                    <div class="uk-form-stacked">
+                        <div class="uk-margin">
+                            <label class="uk-form-label">name</label>
+                            <input type="text" class="uk-input" value="test" disabled>
+                        </div>
+                        <div class="uk-margin">
+                            <label class="uk-form-label">selectorType</label>
+                            <input type="text" class="uk-input" value="CSS Selector" disabled>
+                        </div>
+                    </div>
+                </div>
+                <!-- BrowserOption -->
+                <div class="uk-flex uk-flex-column uk-card-body">
+                    <div class="uk-card-title">BrowserOption</div>
+                    <div class="uk-form-stacked">
+                        <div class="uk-margin">
+                            <div class="uk-column-1-2 uk-flex">
+                                <label class="uk-form-label">isHeadless</label>
+                                <input type="text" class="uk-input" value="true" disabled>
+                            </div>
+                            <div class="uk-column-1-2 uk-flex">
+                                <div class="uk-column-1-2">
+                                    <label class="uk-form-label">browserSize</label>
+                                    <div class="uk-flex">
+                                        <label class="uk-form-label">Height</label>
+                                        <input type="text" class="uk-input" value="1280" disabled>
+                                    </div>
+                                </div>
+                                <div class="uk-column-1-2">
+                                    <label class="uk-form-label">Width</label>
+                                    <input type="text" class="uk-input" value="1280" disabled>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Variables -->
+                <div class="uk-flex uk-flex-column uk-card-body">
+                    <div class="uk-card-title">Variable</div>
+                    <div class="uk-flex uk-flex-column">
+                        <div class="uk-flex">
+                            <div class="uk-flex uk-flex-middle">
+                                <div class="uk-padding"><label>SAMPLE</label></div>
+                                <div><input type="text" class="uk-input uk-form-controls-text" value="condition" disabled></div>
+                            </div>
+                            <div class="uk-flex uk-flex-middle">
+                                <div class="uk-padding"><label>arg1</label></div>
+                                <div><input type="text" class="uk-input uk-form-controls-text" value="" disabled></div>
+                            </div>
+                            <div class="uk-flex uk-flex-middle">
+                                <div class="uk-padding"><label>arg2</label></div>
+                                <div><input type="text" class="uk-input uk-form-controls-text" value="variable" disabled></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Operations -->
+                <div class="uk-flex uk-flex-column uk-card-body">
+                    <div class="uk-card-title">Operation</div>
+                    <div class="uk-flex uk-flex-column">
+                    </div>
+                </div>
+            </div>
+    </div>
+</body>
+</html>
