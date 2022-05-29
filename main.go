@@ -17,7 +17,11 @@ func main() {
 	targetProfile := &(prof[0])
 
 	web.SetRouting(map[string]interface{}{
-		web.Index: nil,
+		web.Index: struct {
+			TEST string
+		}{
+			web.TestNewMermaid().String(),
+		},
 	})
 	http.ListenAndServe(":8080", nil)
 

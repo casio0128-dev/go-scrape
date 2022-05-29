@@ -9,6 +9,12 @@
     <!-- CSS -->
     <link rel="stylesheet" href="./static/css/uikit.min.css">
     <link rel="stylesheet" href="./static/css/uikit-rtl.min.css">
+    <!-- Operationsのグラフ描画 -->
+    <!-- オフライン時 -->
+    <link rel="stylesheet" href="./static/css/process_diagram.css">
+    <!-- オンライン時（https://github.com/mermaid-js/mermaid/blob/develop/docs/n00b-gettingStarted.md） -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+
     <!-- JavaScript -->
     <script src="./static/js/jquery-3.6.0.min.js"></script>
     <script src="./static/js/uikit.min.js"></script>
@@ -29,7 +35,7 @@
     <div>
             <div class="uk-card uk-flex uk-flex-column">
                 <!-- Common -->
-                <div class="uk-flex uk-flex-column uk-card-body">
+                <div class="uk-flex uk-flex-column uk-card uk-card-body">
                     <div class="uk-card-title">Base</div>
                     <div class="uk-form-stacked">
                         <div class="uk-margin">
@@ -43,57 +49,85 @@
                     </div>
                 </div>
                 <!-- BrowserOption -->
-                <div class="uk-flex uk-flex-column uk-card-body">
+                <div class="uk-flex uk-flex-column uk-card uk-card-body">
                     <div class="uk-card-title">BrowserOption</div>
                     <div class="uk-form-stacked">
                         <div class="uk-margin">
-                            <div class="uk-column-1-2 uk-flex">
+                            <div class="uk-flex uk-flex-middle">
                                 <label class="uk-form-label">isHeadless</label>
                                 <input type="text" class="uk-input" value="true" disabled>
                             </div>
-                            <div class="uk-column-1-2 uk-flex">
+                            <div class="uk-flex uk-flex-column">
+                                <label class="uk-form-label">browserSize</label>
                                 <div class="uk-column-1-2">
-                                    <label class="uk-form-label">browserSize</label>
-                                    <div class="uk-flex">
+                                    <div class="uk-flex uk-flex-middle uk-column-1-2">
                                         <label class="uk-form-label">Height</label>
                                         <input type="text" class="uk-input" value="1280" disabled>
                                     </div>
-                                </div>
-                                <div class="uk-column-1-2">
-                                    <label class="uk-form-label">Width</label>
-                                    <input type="text" class="uk-input" value="1280" disabled>
+                                    <div class="uk-flex uk-flex-middle uk-column-1-2">
+                                        <label class="uk-form-label">Width</label>
+                                        <input type="text" class="uk-input" value="1280" disabled>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- Variables -->
-                <div class="uk-flex uk-flex-column uk-card-body">
+                <div class="uk-flex uk-flex-column uk-card uk-card-body">
                     <div class="uk-card-title">Variable</div>
-                    <div class="uk-flex uk-flex-column">
-                        <div class="uk-flex">
-                            <div class="uk-flex uk-flex-middle">
-                                <div class="uk-padding"><label>SAMPLE</label></div>
-                                <div><input type="text" class="uk-input uk-form-controls-text" value="condition" disabled></div>
+                    <div class="uk-margin uk-flex uk-flex-column">
+                        <div class="uk-flex uk-flex-between">
+                            <div class="uk-card uk-card-body uk-card-default">
+                                <label class="uk-card-title">sample</label>
+                                <input class="uk-input" type="text" value="sample" disabled />
                             </div>
-                            <div class="uk-flex uk-flex-middle">
-                                <div class="uk-padding"><label>arg1</label></div>
-                                <div><input type="text" class="uk-input uk-form-controls-text" value="" disabled></div>
+                            <div class="uk-card uk-card-body uk-card-default">
+                                <label class="uk-card-title">sample</label>
+                                <input class="uk-input" type="text" value="sample" disabled />
                             </div>
-                            <div class="uk-flex uk-flex-middle">
-                                <div class="uk-padding"><label>arg2</label></div>
-                                <div><input type="text" class="uk-input uk-form-controls-text" value="variable" disabled></div>
+                            <div class="uk-card uk-card-body uk-card-default">
+                                <label class="uk-card-title">sample</label>
+                                <input class="uk-input" type="text" value="sample" disabled />
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- Operations -->
-                <div class="uk-flex uk-flex-column uk-card-body">
+                <div class="uk-flex uk-flex-column uk-card uk-card-body">
                     <div class="uk-card-title">Operation</div>
-                    <div class="uk-flex uk-flex-column">
+                    <div>{{ .TEST }}</div>
+                    <div class="mermaid">
+                        {{ .TEST }}
+<!--                        flowchart TB-->
+<!--                        Click1(TEST)-->
+<!--                        Click2(SAMPLE)-->
+<!--                        Click1 -&ndash;&gt; Click2-->
+
+<!--                        Click3(True)-->
+<!--                        If1{True is true}-->
+<!--                        Click2 -&ndash;&gt; If1-->
+<!--                        If1 -&ndash;&gt; Click3-->
+<!--                        Click3 -&ndash;&gt; Click1-->
+
                     </div>
+<!--                    <ol class="process_diagram">-->
+<!--                        <li><div>root</div></li>-->
+<!--                        <li><div>root2</div></li>-->
+<!--                        <li>-->
+<!--                            <ul>-->
+<!--                                <li><div>test1</div></li>-->
+<!--                                <li><div>test2</div></li>-->
+<!--                                <li><div>test3</div></li>-->
+<!--                            </ul>-->
+<!--                        </li>-->
+<!--                        <li><div>root3</div></li>-->
+<!--                    </ol>-->
                 </div>
             </div>
     </div>
+    <script>
+        mermaid.initialize({ startOnLoad: true });
+    </script>
 </body>
 </html>
